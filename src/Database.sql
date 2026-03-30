@@ -25,6 +25,8 @@ CREATE TABLE users (
     role ENUM('ADMIN','VOTER') DEFAULT 'VOTER',
     citizenship_no VARCHAR(50) UNIQUE,
     constituency_id INT,
+    profile_image VARCHAR(255),
+    document_image VARCHAR(255),
     is_approved BOOLEAN DEFAULT FALSE,
     token_version INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -52,6 +54,7 @@ CREATE TABLE candidate_applications (
     user_id INT,
     constituency_id INT,
     manifesto TEXT,
+    document_image VARCHAR(255),
     status ENUM('PENDING','APPROVED','REJECTED') DEFAULT 'PENDING',
 
     FOREIGN KEY (user_id) REFERENCES users(user_id),
@@ -67,6 +70,7 @@ CREATE TABLE candidates (
     election_id INT,
     constituency_id INT,
     manifesto TEXT,
+    profile_image VARCHAR(255),
 
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (election_id) REFERENCES elections(election_id),
