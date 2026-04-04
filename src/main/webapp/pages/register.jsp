@@ -510,11 +510,11 @@
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="fullname">Full Name</label>
-                            <input type="text" id="fullname" name="fullname" placeholder="As per citizenship ID" required>
+                            <input type="text" id="fullname" name="fullname" placeholder="As per citizenship ID" pattern="[A-Za-z\s]+" title="Only alphabetic characters and spaces are allowed" required>
                         </div>
                         <div class="form-group">
                             <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" placeholder="name@example.com" required>
+                            <input type="email" id="email" name="email" placeholder="name@gmail.com" pattern=".*@gmail\.com$" title="Please provide a valid @gmail.com address" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
@@ -522,7 +522,7 @@
                         </div>
                         <div class="form-group">
                             <label for="citizenship">Citizenship Number</label>
-                            <input type="text" id="citizenship" name="citizenship" placeholder="ID-000-000-000" required>
+                            <input type="text" id="citizenship" name="citizenship" placeholder="1234567890" pattern="[0-9]+" title="Only numbers are allowed" required>
                         </div>
                         <div class="form-group full-width">
                             <label for="constituency">Constituency</label>
