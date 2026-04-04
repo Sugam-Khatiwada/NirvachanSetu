@@ -3,8 +3,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Account - NirvachanSetu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+        }
         :root {
             --primary-blue: #002060;
             --primary-blue-hover: #001540;
@@ -52,6 +57,7 @@
             justify-content: center;
             align-items: center;
             padding: 40px 20px;
+            width: 100%;
         }
         .card {
             display: flex;
@@ -265,14 +271,205 @@
         }
         .success { color: green; }
         .error { color: red; }
+
+        /* Responsive Design */
+        .mobile-heading {
+            display: none;
+            padding: 0 20px 20px;
+        }
+        .mobile-heading h1 {
+            color: var(--primary-blue);
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.5px;
+        }
+        .mobile-heading p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .mobile-badges-wrapper {
+            display: none;
+        }
+
+        @media (max-width: 850px) {
+            body {
+                background-color: #F8F9FA;
+            }
+            .main-wrapper {
+                padding: 0 20px 20px;
+                width: 100%;
+                box-sizing: border-box;
+                display: block;
+            }
+            .card {
+                box-shadow: none;
+                flex-direction: column;
+                background: #FFFFFF;
+                border: 1px solid #E5E7EB;
+                border-radius: 12px;
+                padding: 20px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .sidebar {
+                display: none;
+            }
+            .form-section {
+                padding: 0;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .form-section > p {
+                display: none;
+            }
+            .form-section h3 {
+                font-size: 18px;
+                margin-bottom: 20px;
+                font-weight: 700;
+            }
+
+            .mobile-heading {
+                display: block;
+            }
+
+            header {
+                padding: 20px;
+            }
+            .logo {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+            .logo::before {
+                content: "←";
+                font-size: 20px;
+                color: var(--primary-blue);
+                font-weight: normal;
+                cursor: pointer;
+            }
+            .support-link {
+                background: #6c757d;
+                color: white;
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                font-size: 14px;
+                font-weight: bold;
+                text-decoration: none;
+            }
+            .support-link::before {
+                content: "?";
+            }
+            .support-link {
+                font-size: 0; /* Hide text, show icon */
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            input[type="text"], input[type="email"], input[type="password"], select {
+                background-color: #FFFFFF;
+                border: 1px solid #E5E7EB;
+                border-radius: 8px;
+                padding: 14px 15px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .upload-area {
+                background-color: #FFFFFF;
+                border-color: #E5E7EB;
+                padding: 20px;
+                margin-bottom: 20px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .upload-text {
+                font-size: 13px;
+                color: #000;
+            }
+            .upload-sub {
+                color: #666;
+            }
+
+            .btn-submit {
+                border-radius: 8px;
+                padding: 16px;
+                font-size: 15px;
+                background-color: #1A3673; 
+            }
+
+            .login-link {
+                margin-top: 25px;
+                font-size: 14px;
+            }
+            .login-link a {
+                color: #0056b3;
+            }
+
+            .mobile-badges-wrapper {
+                display: flex;
+                justify-content: center;
+                gap: 40px;
+                margin-top: 30px;
+                margin-bottom: 20px;
+            }
+            .badge-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .badge-icon {
+                color: var(--primary-blue);
+            }
+            .badge-text h4 {
+                margin: 0;
+                font-size: 11px;
+                font-weight: 800;
+                color: var(--primary-blue);
+            }
+            .badge-text p {
+                margin: 0;
+                font-size: 10px;
+                color: #666;
+            }
+
+            footer {
+                background: transparent;
+                padding: 20px;
+                font-size: 10px;
+                color: #666;
+            }
+            footer .footer-links {
+                gap: 15px;
+                margin-top: 15px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">NirvachanSetu</div>
-        <a href="#" class="support-link">Support</a>
+        <div class="logo" onclick="window.history.back()">NirvachanSetu</div>
+        <a href="#" class="support-link" title="Support">Support</a>
     </header>
+
+    <div class="mobile-heading">
+        <h1>Join the Digital Bastion</h1>
+        <p>Create your secure identity to participate in the democratic process. Your data is protected by sovereign-grade encryption.</p>
+    </div>
 
     <div class="main-wrapper">
         <div class="card">
@@ -343,14 +540,13 @@
                         <label>Legal Identification Proof</label>
                         <div class="upload-area">
                             <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                            <p class="upload-text">Click to upload or drag and drop</p>
+                            <p class="upload-text">Upload ID Proof</p>
                             <p class="upload-sub">PDF, PNG or JPG (max. 10MB)</p>
                         </div>
                     </div>
 
                     <button type="submit" class="btn-submit">
-                        Complete Registration
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        Complete Registration ->
                     </button>
                 </form>
 
@@ -361,6 +557,27 @@
                 </div>
             </div>
 
+        </div>
+        
+        <div class="mobile-badges-wrapper">
+            <div class="badge-item">
+                <div class="badge-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+                </div>
+                <div class="badge-text">
+                    <h4>VERIFIED</h4>
+                    <p>Official Portal</p>
+                </div>
+            </div>
+            <div class="badge-item">
+                <div class="badge-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+                <div class="badge-text">
+                    <h4>SECURE</h4>
+                    <p>Encrypted Data</p>
+                </div>
+            </div>
         </div>
     </div>
 

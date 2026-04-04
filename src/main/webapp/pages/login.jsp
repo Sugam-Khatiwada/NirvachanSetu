@@ -3,8 +3,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - NirvachanSetu</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         :root {
             --primary-blue: #1A3673; /* Made it match the image dark blue */
             --primary-blue-hover: #152B5C;
@@ -31,6 +35,7 @@
             justify-content: center;
             align-items: center;
             padding: 40px 20px;
+            width: 100%;
         }
         .card {
             display: flex;
@@ -298,6 +303,205 @@
         }
         .success { color: green; }
         .error { color: red; }
+
+        /* Responsive Design */
+        .mobile-header {
+            display: none;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .mobile-header h1 {
+            color: var(--primary-blue);
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .mobile-header .underline {
+            width: 40px;
+            height: 3px;
+            background-color: #007bff;
+            margin: 5px auto 0;
+            border-radius: 2px;
+        }
+
+        .auth-buttons-wrapper {
+            display: none;
+        }
+        
+        .info-card {
+            display: none;
+        }
+
+        .fine-print {
+            display: none;
+        }
+
+        @media (max-width: 850px) {
+            body {
+                background-color: #F8F9FA;
+            }
+            .main-wrapper {
+                padding: 10px 20px; /* Reduced paddings */
+                width: 100%;
+                box-sizing: border-box;
+                display: block;
+            }
+            .card {
+                box-shadow: none;
+                background: transparent;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .sidebar {
+                display: none; /* Hide sidebar completely */
+            }
+            .mobile-header {
+                display: block;
+            }
+            .form-section {
+                padding: 0;
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .form-section h3 {
+                text-align: center;
+                font-size: 26px;
+                color: #111;
+            }
+            .form-section > p {
+                text-align: center;
+                font-size: 14px;
+                color: #555;
+            }
+            
+            input[type="text"], input[type="password"] {
+                background-color: #FFFFFF;
+                border-radius: 12px;
+                padding: 16px 15px 16px 40px;
+            }
+
+            .btn-submit {
+                border-radius: 24px;
+                padding: 14px;
+                font-size: 16px;
+            }
+            
+            .divider-text {
+                position: relative;
+                text-align: center;
+                margin: 30px 0;
+            }
+            .divider-text::before, .divider-text::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                width: 30%;
+                height: 1px;
+                background-color: #e0e0e0;
+            }
+            .divider-text::before { left: 0; }
+            .divider-text::after { right: 0; }
+            .divider-text span {
+                color: #777;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 1px;
+            }
+
+            .divider {
+                display: none; /* Hide old divider */
+            }
+
+            .auth-buttons-wrapper {
+                display: flex;
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+            .auth-btn {
+                flex: 1;
+                background: #FFFFFF;
+                border: none;
+                border-radius: 12px;
+                padding: 14px;
+                font-weight: 600;
+                font-size: 14px;
+                color: #333;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            }
+
+            .info-card {
+                display: flex;
+                align-items: center;
+                background: #FFFFFF;
+                border-radius: 16px;
+                padding: 15px;
+                margin-bottom: 20px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            }
+            .info-icon {
+                background: var(--primary-blue);
+                color: white;
+                width: 36px;
+                height: 36px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                flex-shrink: 0;
+                margin-right: 15px;
+            }
+            .info-text {
+                flex: 1;
+            }
+            .info-text h4 {
+                margin: 0 0 2px 0;
+                font-size: 13px;
+                color: var(--primary-blue);
+            }
+            .info-text p {
+                margin: 0;
+                font-size: 11px;
+                color: #666;
+            }
+            .info-arrow {
+                background: var(--primary-blue);
+                color: white;
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .fine-print {
+                display: block;
+                font-size: 9px;
+                text-align: center;
+                color: #999;
+                text-transform: uppercase;
+                line-height: 1.4;
+                margin-top: 10px;
+            }
+
+            footer {
+                display: none;
+            }
+            .bottom-links {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -326,38 +530,47 @@
 
             <!-- Right Form -->
             <div class="form-section">
-                <h3>Welcome Back</h3>
-                <p>Please enter your credentials to access your account.</p>
+                <div class="mobile-header">
+                    <h1>NirvachanSetu</h1>
+                    <div class="underline"></div>
+                </div>
+
+                <h3>Portal Access</h3>
+                <p>Please enter your credentials to proceed to the secure voting terminal.</p>
 
                 <form id="loginForm">
                     <div class="form-group">
                         <div class="label-row">
-                            <label for="username">Voter ID / Email</label>
+                            <label for="username">VOTER IDENTIFICATION (VID)</label>
                         </div>
                         <div class="input-wrapper">
                             <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                            <input type="text" id="username" name="username" placeholder="Enter Voter ID or Email" required>
+                            <input type="text" id="username" name="username" placeholder="12-digit VID Number" required>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <div class="label-row">
-                            <label for="password">Password</label>
-                            <a href="#" class="forgot-password">Forgot Password?</a>
+                            <label for="password">PASSCODE</label>
                         </div>
                         <div class="input-wrapper">
                             <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                             <input type="password" id="password" name="password" placeholder="••••••••" required>
+                            <!-- You can add an eye icon svg here positioned right -->
+                            <svg style="position: absolute; right: 15px; width: 16px; height: 16px; color: #888; cursor: pointer;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                         </div>
                     </div>
                     
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="remember" name="remember">
-                        <label for="remember">Remember this device</label>
+                    <div class="checkbox-group" style="justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="remember" name="remember">
+                            <label for="remember">Remember me</label>
+                        </div>
+                        <a href="#" class="forgot-password">Forgot Access?</a>
                     </div>
 
                     <button type="submit" class="btn-submit">
-                        Login
+                        Sign In to Secure Portal
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                     </button>
                     
@@ -365,9 +578,39 @@
                 </form>
 
                 <div class="divider"></div>
+                <div class="divider-text">
+                    <span>OR AUTHENTICATE VIA</span>
+                </div>
+
+                <div class="auth-buttons-wrapper">
+                    <button class="auth-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                        Digital ID
+                    </button>
+                    <button class="auth-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#007bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect></svg>
+                        m-Token
+                    </button>
+                </div>
 
                 <div class="register-link">
-                    New to the platform? <a href="register.jsp">Register Now</a>
+                    Don't have an account? <a href="register.jsp">Register for E-Voting</a>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon">i</div>
+                    <div class="info-text">
+                        <h4>New to NirvachanSetu?</h4>
+                        <p>Learn how to vote securely</p>
+                    </div>
+                    <div class="info-arrow">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </div>
+                </div>
+
+                <div class="fine-print">
+                    THIS PORTAL IS PROTECTED BY NATIONAL SECURITY PROTOCOLS.<br>
+                    UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED AND SUBJECT TO LEGAL ACTION.
                 </div>
                 
                 <div class="bottom-links">
