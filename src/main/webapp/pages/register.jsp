@@ -540,9 +540,10 @@
                         <label for="idProof">Legal Identification Proof</label>
                         <div class="upload-area" onclick="document.getElementById('idProof').click()">
                             <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                            <p class="upload-text">Upload ID Proof</p>
+                            <p class="upload-text" id="uploadText">Upload ID Proof</p>
                             <p class="upload-sub">PDF, PNG or JPG (max. 10MB)</p>
-                            <input type="file" id="idProof" name="idProof" accept=".pdf, .png, .jpg, .jpeg" required style="margin-top: 15px; width: 100%; font-size: 12px; cursor: pointer;">
+                            <!-- Hidden input field, triggered by clicking the upload-area div above -->
+                            <input type="file" id="idProof" name="idProof" accept=".pdf, .png, .jpg, .jpeg" required style="display: none;" onchange="if(this.files[0]) document.getElementById('uploadText').innerText = 'Selected: ' + this.files[0].name;">
                         </div>
                     </div>
 
