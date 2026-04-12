@@ -3,4 +3,114 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
          version="6.0">
+
+    <display-name>NirvachanSetu - Election Management System</display-name>
+
+    <description>
+        NirvachanSetu is a comprehensive Election Management System inspired by Nepal's Election Commission.
+        It manages voter registration, candidate applications, voting processes, and election results.
+    </description>
+
+    <!-- ========================================
+         SESSION CONFIGURATION
+         ======================================== -->
+
+    <session-config>
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>false</secure>
+            <same-site>Lax</same-site>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+    <!-- ========================================
+         WELCOME FILES
+         ======================================== -->
+
+    <welcome-file-list>
+        <welcome-file>login</welcome-file>
+    </welcome-file-list>
+
+    <!-- ========================================
+         AUTHENTICATION FILTER
+         ======================================== -->
+
+    <filter>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>com.nirvachansetu.filter.AuthFilter</filter-class>
+        <init-param>
+            <param-name>excludedPaths</param-name>
+            <param-value>/login,/register,/css,/js,/images,/assets</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- ========================================
+         ERROR PAGES
+         ======================================== -->
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/error.jsp</location>
+    </error-page>
+
+    <!-- ========================================
+         MIME TYPES
+         ======================================== -->
+
+    <mime-mapping>
+        <extension>json</extension>
+        <mime-type>application/json</mime-type>
+    </mime-mapping>
+
+    <mime-mapping>
+        <extension>woff</extension>
+        <mime-type>font/woff</mime-type>
+    </mime-mapping>
+
+    <mime-mapping>
+        <extension>woff2</extension>
+        <mime-type>font/woff2</mime-type>
+    </mime-mapping>
+
+    <mime-mapping>
+        <extension>svg</extension>
+        <mime-type>image/svg+xml</mime-type>
+    </mime-mapping>
+
+    <mime-mapping>
+        <extension>ico</extension>
+        <mime-type>image/x-icon</mime-type>
+    </mime-mapping>
+
+    <!-- ========================================
+         CONTEXT PARAMETERS
+         ======================================== -->
+
+    <context-param>
+        <param-name>appName</param-name>
+        <param-value>NirvachanSetu</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>appVersion</param-name>
+        <param-value>1.0.0</param-value>
+    </context-param>
+
 </web-app>
