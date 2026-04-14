@@ -108,12 +108,21 @@ public class AuthServlet extends HttpServlet {
                 session.setAttribute("role", user.getRole().name());
 
                 // Redirect to role-based dashboard
-                String dashboardPath = switch (user.getRole()) {
-                    case ADMIN -> "/admin/dashboard";
-                    case VOTER -> "/voter/dashboard";
-                    case CANDIDATE -> "/candidate/dashboard";
-                    default -> "/login";
-                };
+                String dashboardPath;
+                switch (user.getRole()) {
+                    case ADMIN:
+                        dashboardPath = "/admin/dashboard";
+                        break;
+                    case VOTER:
+                        dashboardPath = "/voter/dashboard";
+                        break;
+                    case CANDIDATE:
+                        dashboardPath = "/candidate/dashboard";
+                        break;
+                    default:
+                        dashboardPath = "/login";
+                        break;
+                }
 
                 response.sendRedirect(request.getContextPath() + dashboardPath);
             } else {
