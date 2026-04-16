@@ -1,5 +1,8 @@
 package com.nirvachansetu.controller;
 
+import java.io.IOException;
+import java.util.List;
+
 import com.nirvachansetu.model.Candidate;
 import com.nirvachansetu.model.CandidateApplication;
 import com.nirvachansetu.model.Constituency;
@@ -9,14 +12,12 @@ import com.nirvachansetu.service.CandidateService;
 import com.nirvachansetu.service.ElectionService;
 import com.nirvachansetu.service.UserService;
 import com.nirvachansetu.service.VoteService;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.util.List;
 
 /**
  * VoterDashboardServlet displays the voter's personalized dashboard with:
@@ -45,48 +46,89 @@ public class VoterDashboardServlet extends HttpServlet {
                 return;
             }
 
-            User user = userService.findById(sessionUser.getId());
-            if (user == null) {
-                response.sendRedirect(request.getContextPath() + "/login");
-                return;
-            }
-
-            // Update session with fresh user
+            // ==============================================
+            // BYPASS DB CHECK AND MOCK DATA FOR UI TESTING
+            // ==============================================
+            // Use the simulated user from session (injected by AuthFilter)
+            User user = sessionUser; 
             request.getSession().setAttribute("user", user);
 
             Constituency constituency = user.getConstituency();
 
-            // Get active elections
-            List<Election> activeElections = electionService.getActiveElections();
+            // MOCK: Active elections
+            List<Election> activeElections = new java.util.ArrayList<>();
+            Election mockElection = new Election();
+            mockElection.setId(1);
+            mockElection.setName("2026 General Assembly Elections");
+            mockElection.setStartDate(java.time.LocalDateTime.now().plusDays(14));
+            activeElections.add(mockElection);
 
-            // Get candidates in the voter's constituency (for first active election)
-            List<Candidate> candidates = null;
+            Election currentElection = activeElections.get(0);
             boolean hasVoted = false;
-            Election currentElection = null;
+            
+            // MOCK: Candidates
+            List<Candidate> candidates = new java.util.ArrayList<>();
+            
+            User candUser1 = new User();
+            candUser1.setFullName("Vikram Aditya");
+            Candidate cand1 = new Candidate();
+            cand1.setId(101);
+            cand1.setUser(candUser1);
+            cand1.setPartyType(CandidateApplication.PartyType.NATIONAL);
+            cand1.setPartyName("National Party");
+            cand1.setSymbol("Sun");
+            cand1.setManifesto("Infrastructure & Progress");
+            candidates.add(cand1);
 
+            User candUser2 = new User();
+            candUser2.setFullName("Prakash Hegde");
+            Candidate cand2 = new Candidate();
+            cand2.setId(102);
+            cand2.setUser(candUser2);
+            cand2.setPartyType(CandidateApplication.PartyType.INDEPENDENT);
+            cand2.setPartyName("Independent");
+            cand2.setSymbol("Bicycle");
+            cand2.setManifesto("Civic Activism");
+            candidates.add(cand2);
+            
+            User candUser3 = new User();
+            candUser3.setFullName("Savitri Devi");
+            Candidate cand3 = new Candidate();
+            cand3.setId(103);
+            cand3.setUser(candUser3);
+            cand3.setPartyType(CandidateApplication.PartyType.REGIONAL);
+            cand3.setPartyName("Regional Alliance");
+            cand3.setSymbol("Tree");
+            cand3.setManifesto("Public Health & Education");
+            candidates.add(cand3);
+
+            int totalVotersInConstituency = constituency != null && constituency.getTotalVoters() != null ? constituency.getTotalVoters() : 1200000;
+
+            // MOCK: empty registration
+            List<Election> registrationElections = new java.util.ArrayList<>();
+            List<CandidateApplication> userApplications = new java.util.ArrayList<>();
+
+            /* // --> COMMENTED OUT ACTUAL DATABASE LOGIC <--
+            User dbUser = userService.findById(sessionUser.getId());
+            if (dbUser == null) {
+                response.sendRedirect(request.getContextPath() + "/login");
+                return;
+            }
+            activeElections = electionService.getActiveElections();
             if (activeElections != null && !activeElections.isEmpty()) {
                 currentElection = activeElections.get(0);
-
                 if (constituency != null) {
-                    candidates = candidateService.getCompetingCandidates(
-                            currentElection.getId(), constituency.getId());
-
-                    // Check if voter has already voted in the current election
+                    candidates = candidateService.getCompetingCandidates(currentElection.getId(), constituency.getId());
                     hasVoted = voteService.hasVoted(currentElection.getId(), user.getId());
                 }
             }
-
-            // Total voters in constituency
-            int totalVotersInConstituency = 0;
             if (constituency != null) {
                 totalVotersInConstituency = constituency.getTotalVoters() != null ? constituency.getTotalVoters() : 0;
             }
-
-            // Get elections in REGISTRATION status (for candidacy application)
-            List<Election> registrationElections = electionService.findByStatus("REGISTRATION");
-
-            // Check if user has any pending/approved applications
-            List<CandidateApplication> userApplications = candidateService.getApplicationsByUser(user.getId());
+            registrationElections = electionService.findByStatus("REGISTRATION");
+            userApplications = candidateService.getApplicationsByUser(user.getId());
+            */
+            // ==============================================
 
             // Set request attributes
             request.setAttribute("user", user);
