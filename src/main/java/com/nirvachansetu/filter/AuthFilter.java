@@ -1,13 +1,19 @@
 package com.nirvachansetu.filter;
 
+import java.io.IOException;
+
 import com.nirvachansetu.model.User;
 import com.nirvachansetu.util.AppConstants;
-import jakarta.servlet.*;
+
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
-import java.io.IOException;
 
 /**
  * Authentication and authorization filter.
@@ -38,11 +44,34 @@ public class AuthFilter implements Filter {
             return;
         }
 
-        // Check if user is logged in
-        if (session == null || session.getAttribute(AppConstants.SESSION_USER) == null) {
-            httpResponse.sendRedirect(contextPath + AppConstants.URL_LOGIN);
-            return;
+        // =========================================================================
+        // --- BYPASS AUTH LOGIC FOR UI TESTING (DUMMY LOGIN) ---
+        // Explaination: If a user is not logged in through the conventional /login,
+        // this interceptor forcefully injects a simulated Voter into the session.
+        // This ensures developers can test dashboard UI without DB dependencies.
+        // =========================================================================
+        if (session == null || session.getAttribute(com.nirvachansetu.util.AppConstants.SESSION_USER) == null) {
+            session = httpRequest.getSession(true);
+            
+            // Create a fake dummy user
+            com.nirvachansetu.model.User dummyUser = new com.nirvachansetu.model.User();
+            dummyUser.setId(-1);
+            dummyUser.setFullName("Vikrant Singh"); // The name seen on UI
+            dummyUser.setEmail("vikrant@test.com");
+            dummyUser.setRole(com.nirvachansetu.model.User.Role.VOTER);
+            dummyUser.setStatus(com.nirvachansetu.model.User.UserStatus.APPROVED);
+            
+            // Configure a fake constituency for the User
+            com.nirvachansetu.model.Constituency dummyC = new com.nirvachansetu.model.Constituency();
+            dummyC.setId(1);
+            dummyC.setName("Bangalore South");
+            dummyC.setTotalVoters(1250000);
+            dummyUser.setConstituency(dummyC);
+            
+            // Save the dummy user into session
+            session.setAttribute(com.nirvachansetu.util.AppConstants.SESSION_USER, dummyUser);
         }
+        // =========================================================================
 
         // Get the logged-in user
         User user = (User) session.getAttribute(AppConstants.SESSION_USER);
