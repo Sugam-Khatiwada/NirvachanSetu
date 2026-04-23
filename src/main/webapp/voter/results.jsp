@@ -147,6 +147,8 @@
                 </div>
 
                 <!-- 4 Stats Cards -->
+                <c:set var="declaredPercent" value="${(dashboardStats.declared * 100.0) / dashboardStats.totalSeats}" />
+                <c:set var="leadingPercent" value="${(dashboardStats.leading * 100.0) / dashboardStats.totalSeats}" />
                 <div class="stats-row">
                     <div class="stat-card">
                         <div>
@@ -163,8 +165,7 @@
                             <div class="stat-value"><c:out value="${dashboardStats.declared}" /></div>
                         </div>
                         <div class="stat-bar-wrapper">
-                            <c:set var="declaredWidth" value="width: ${dashboardStats.declared * 100 / dashboardStats.totalSeats}%;" />
-                            <div class="stat-bar bar-partial" style="${declaredWidth}"></div>
+                            <div class="stat-bar bar-partial js-stat-bar" data-width="${declaredPercent}"></div>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -173,8 +174,7 @@
                             <div class="stat-value"><c:out value="${dashboardStats.leading}" /></div>
                         </div>
                         <div class="stat-bar-wrapper">
-                            <c:set var="leadingWidth" value="width: ${dashboardStats.leading * 100 / dashboardStats.totalSeats}%;" />
-                            <div class="stat-bar bar-leading" style="${leadingWidth}"></div>
+                            <div class="stat-bar bar-leading js-stat-bar" data-width="${leadingPercent}"></div>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -183,8 +183,7 @@
                             <div class="stat-value"><c:out value="${dashboardStats.voterTurnout}" />%</div>
                         </div>
                         <div class="stat-bar-wrapper">
-                            <c:set var="turnoutWidth" value="width: ${dashboardStats.voterTurnout}%;" />
-                            <div class="stat-bar bar-turnout" style="${turnoutWidth}"></div>
+                            <div class="stat-bar bar-turnout js-stat-bar" data-width="${dashboardStats.voterTurnout}"></div>
                         </div>
                     </div>
                 </div>
@@ -214,8 +213,7 @@
                     <div class="chart-card">
                         <h2 class="card-title">Constituency Turnout</h2>
                         <div class="donut-container">
-                            <c:set var="donutBg" value="background: conic-gradient(var(--primary-blue) 0% ${dashboardStats.voterTurnout}%, #f3f4f6 ${dashboardStats.voterTurnout}% 100%);" />
-                            <div class="donut" style="${donutBg}">
+c                            <div class="donut" data-turnout="${dashboardStats.voterTurnout}">
                                 <div class="donut-inner">
                                     <span class="donut-val"><c:out value="${dashboardStats.voterTurnout}" />%</span>
                                     <span class="donut-lbl">OVERALL</span>
@@ -277,5 +275,21 @@
 
     </main>
 
+    <script>
+        document.querySelectorAll('.js-stat-bar').forEach(function (bar) {
+            var width = parseFloat(bar.getAttribute('data-width'));
+            if (!isNaN(width)) {
+                bar.style.width = Math.max(0, Math.min(100, width)) + '%';
+            }
+        });
+
+        document.querySelectorAll('.donut[data-turnout]').forEach(function (donut) {
+            var turnout = parseFloat(donut.getAttribute('data-turnout'));
+            if (!isNaN(turnout)) {
+                turnout = Math.max(0, Math.min(100, turnout));
+                donut.style.background = 'conic-gradient(var(--primary-blue) 0% ' + turnout + '%, #f3f4f6 ' + turnout + '% 100%)';
+            }
+        });
+    </script>
 </body>
 </html>
