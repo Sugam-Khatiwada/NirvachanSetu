@@ -116,32 +116,6 @@
 </head>
 <body>
 
-<!-- Navigation Bar -->
-<nav class="navbar">
-    <div class="container">
-        <div class="nav-left">
-            <div class="brand">NirvachanSetu</div>
-            <div class="nav-links">
-                <a href="#" class="active">Dashboard</a>
-                <a href="${pageContext.request.contextPath}/voter/candidates">Candidates</a>
-                <a href="${pageContext.request.contextPath}/voter/vote">Vote</a>
-                <a href="${pageContext.request.contextPath}/voter/results">Results</a>
-                <a href="${pageContext.request.contextPath}/voter/profile">Profile</a>
-            </div>
-        </div>
-        <div class="nav-right">
-            <div class="nav-actions">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search elections...">
-                </div>
-                <button class="icon-btn"><i class="fas fa-bell"></i></button>
-                <button class="icon-btn"><i class="fas fa-question-circle"></i></button>
-            </div>
-            <img class="avatar" src="<c:out value='${user.profileImage != null ? user.profileImage : \"https://ui-avatars.com/api/?name=\" += user.fullName}' />" alt="${user.fullName}">
-        </div>
-    </div>
-</nav>
 
 <main class="main-content container">
     <div class="top-grid">
