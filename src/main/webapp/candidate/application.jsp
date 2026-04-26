@@ -475,7 +475,8 @@
                 <label for="partyType">Party Type</label>
                 <select id="partyType" name="partyType" required>
                   <option value="" disabled selected>Select party type</option>
-                  <option value="PARTY_MEMBER">Party Member</option>
+                  <option value="NATIONAL">National Party</option>
+                  <option value="REGIONAL">Regional Party</option>
                   <option value="INDEPENDENT">Independent</option>
                 </select>
               </div>

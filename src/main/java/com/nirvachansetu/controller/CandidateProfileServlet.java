@@ -1,17 +1,20 @@
 package com.nirvachansetu.controller;
 
-import com.nirvachansetu.model.User;
-import com.nirvachansetu.service.UserService;
+import java.io.IOException;
+import java.util.List;
+
 import com.nirvachansetu.dao.ConstituencyDAO;
+import com.nirvachansetu.model.Candidate;
 import com.nirvachansetu.model.Constituency;
+import com.nirvachansetu.model.User;
+import com.nirvachansetu.service.CandidateService;
+import com.nirvachansetu.service.UserService;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.util.List;
 
 /**
  * CandidateProfileServlet handles the candidate's profile management:
@@ -23,6 +26,7 @@ import java.util.List;
 public class CandidateProfileServlet extends HttpServlet {
 
     private UserService userService = new UserService();
+    private CandidateService candidateService = new CandidateService();
     private ConstituencyDAO constituencyDAO = new ConstituencyDAO();
 
     @Override
@@ -39,9 +43,13 @@ public class CandidateProfileServlet extends HttpServlet {
 
             // Get all constituencies for display
             List<Constituency> constituencies = constituencyDAO.findAll();
+            Candidate candidate = candidateService.findByUser(user.getId());
+            String currentManifesto = candidate != null ? candidate.getManifesto() : null;
 
             request.setAttribute("user", user);
             request.setAttribute("constituencies", constituencies);
+            request.setAttribute("candidate", candidate);
+            request.setAttribute("currentManifesto", currentManifesto);
             request.getRequestDispatcher("/candidate/profile.jsp").forward(request, response);
 
         } catch (Exception e) {

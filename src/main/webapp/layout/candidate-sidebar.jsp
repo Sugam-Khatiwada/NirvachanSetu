@@ -96,7 +96,7 @@
     <a href="${pageContext.request.contextPath}/candidate/profile" class="side-link ${activeCandidateNav == 'profile' ? 'active' : ''}">
       <span>[P]</span> My Profile
     </a>
-    <a href="#competitors" class="side-link">
+    <a href="${pageContext.request.contextPath}/candidate/competing" class="side-link ${activeCandidateNav == 'competing' ? 'active' : ''}">
       <span>[C]</span> Competitors
     </a>
     <a href="${pageContext.request.contextPath}/candidate/manifesto" class="side-link ${activeCandidateNav == 'manifesto' ? 'active' : ''}">

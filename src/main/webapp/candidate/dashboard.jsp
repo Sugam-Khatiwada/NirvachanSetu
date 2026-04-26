@@ -418,6 +418,10 @@
       <c:if test="${not empty error}">
         <div class="alert-strip alert-error"><c:out value="${error}" /></div>
       </c:if>
+      <c:if test="${not empty sessionScope.error}">
+        <div class="alert-strip alert-error"><c:out value="${sessionScope.error}" /></div>
+        <% request.getSession().removeAttribute("error"); %>
+      </c:if>
       <c:if test="${not empty sessionScope.success}">
         <div class="alert-strip alert-success"><c:out value="${sessionScope.success}" /></div>
         <% request.getSession().removeAttribute("success"); %>
