@@ -292,20 +292,4 @@
 
 </main>
 
-<footer class="footer">
-    <div class="container">
-        <div>
-            <span class="footer-brand">NirvachanSetu</span>
-            <span>&copy; 2026 Election Commission. All rights reserved.</span>
-        </div>
-        <div class="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Accessibility</a>
-            <a href="#">Contact Support</a>
-        </div>
-    </div>
-</footer>
 
-</body>
-</html>
