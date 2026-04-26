@@ -1,5 +1,25 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+    // BYPASS LOGIC: Force dummy data into request scope to override the session user
+    java.util.Map<String, Object> mockUser = new java.util.HashMap<>();
+    mockUser.put("fullName", "Arjun Srinivasan");
+    mockUser.put("voterId", "ABC1234567");
+    
+    java.util.Map<String, String> mockConst = new java.util.HashMap<>();
+    mockConst.put("name", "Bangalore South (26)");
+    mockUser.put("constituency", mockConst);
+    
+    mockUser.put("pollingStation", "St. Mary's School, Block B, Room 4");
+    mockUser.put("dob", "14 May 1992");
+    mockUser.put("gender", "Male");
+    mockUser.put("mobileNumber", "+91 98XXX XX042");
+    mockUser.put("address", "Flat 402, Green Meadows Apts, 4th Main, HSR Layout Sector 2, Bangalore - 560102");
+    mockUser.put("relativeName", "Srinivasan Ramanujan (Father)");
+    mockUser.put("epicCardType", "Digital PVC e-EPIC");
+    
+    request.setAttribute("user", mockUser);
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
