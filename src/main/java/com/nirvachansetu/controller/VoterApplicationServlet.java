@@ -81,11 +81,11 @@ public class VoterApplicationServlet extends HttpServlet {
             request.setAttribute("activeApplications", activeApplications);
             request.setAttribute("user", user);
 
-            request.getRequestDispatcher("/voter/apply-candidacy.jsp").forward(request, response);
+            request.getRequestDispatcher("/voter/apply-candidancy.jsp").forward(request, response);
 
         } catch (Exception e) {
             request.setAttribute("error", "Error loading application form: " + e.getMessage());
-            request.getRequestDispatcher("/voter/apply-candidacy.jsp").forward(request, response);
+            request.getRequestDispatcher("/voter/apply-candidancy.jsp").forward(request, response);
         }
     }
 

@@ -45,12 +45,6 @@ public class CandidateApplicationServlet extends HttpServlet {
             // Get available elections (those in REGISTRATION status)
             List<Election> elections = electionService.findByStatus("REGISTRATION");
 
-            // Also include ACTIVE elections if registration is still open
-            List<Election> activeElections = electionService.getActiveElections();
-            if (activeElections != null) {
-                elections.addAll(activeElections);
-            }
-
             // Get all constituencies
             List<Constituency> constituencies = constituencyDAO.findAll();
 

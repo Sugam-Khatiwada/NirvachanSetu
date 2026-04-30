@@ -121,6 +121,13 @@ public class VoterVoteServlet extends HttpServlet {
             // Cast the vote using service method with individual IDs
             Constituency constituency = user.getConstituency();
 
+            if (constituency == null) {
+                request.getSession().setAttribute("error",
+                        "You are not assigned to any constituency. Please contact the administrator.");
+                response.sendRedirect(request.getContextPath() + "/voter/dashboard");
+                return;
+            }
+
             voteService.castVote(electionId, candidateId,
                     constituency.getId(), user.getId());
 

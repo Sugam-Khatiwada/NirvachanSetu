@@ -1,295 +1,330 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>National Results Dashboard - NirvachanSetu</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-blue: #0b1a40;
-            --secondary-blue: #1d4ed8;
-            --bg-color: #f4f6f8;
-            --text-dark: #111827;
-            --text-gray: #6b7280;
-            --text-light: #9ca3af;
-            --border-color: #e5e7eb;
-            --card-bg: #ffffff;
-            --font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: var(--font-family); background-color: var(--bg-color); color: var(--text-dark); line-height: 1.5; -webkit-font-smoothing: antialiased; }
-        a { text-decoration: none; color: inherit; }
-        
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-
-        /* Main Content */
-        .main-content { padding: 40px 0 60px; }
-        
-        /* Page Header */
-        .page-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
-        .title-sub { font-size: 0.75rem; font-weight: 700; color: var(--text-gray); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 8px; }
-        .title-main { font-size: 2.25rem; font-weight: 800; color: var(--primary-blue); letter-spacing: -0.02em; }
-        
-        .header-actions { display: flex; gap: 16px; align-items: center; }
-        .live-badge { background: white; padding: 10px 20px; border-radius: 24px; font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 10px; color: var(--text-dark); border: 1px solid var(--border-color); }
-        .live-dot { width: 8px; height: 8px; background: #ef4444; border-radius: 50%; display: inline-block; }
-        @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
-        .live-dot { animation: pulse 2s infinite; }
-        .btn-export { background: var(--primary-blue); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background-color 0.2s; }
-        .btn-export:hover { background: #07122b; }
-
-        /* Stats Row */
-        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 32px; }
-        .stat-card { background: white; padding: 24px; border-radius: 12px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .stat-label { font-size: 0.875rem; color: var(--text-gray); font-weight: 500; margin-bottom: 8px; }
-        .stat-value { font-size: 2.25rem; font-weight: 700; color: var(--primary-blue); letter-spacing: -0.02em; }
-        .stat-bar-wrapper { width: 100%; height: 4px; background: #f3f4f6; margin-top: 24px; border-radius: 2px; overflow: hidden; }
-        .stat-bar { height: 100%; border-radius: 2px; }
-        .bar-full { width: 100%; background: var(--primary-blue); }
-        .bar-partial { background: var(--secondary-blue); }
-        .bar-leading { background: #5c1814; }
-        .bar-turnout { background: var(--secondary-blue); }
-
-        /* Middle Row */
-        .middle-row { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 40px; }
-        .chart-card { background: white; padding: 32px; border-radius: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); display: flex; flex-direction: column; }
-        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
-        .card-title { font-size: 1.125rem; font-weight: 700; color: var(--primary-blue); }
-        
-        /* Bar Chart Area */
-        .legend { display: flex; gap: 20px; font-size: 0.75rem; font-weight: 600; color: var(--text-gray); }
-        .legend-item { display: flex; align-items: center; gap: 8px; }
-        .dot { width: 10px; height: 10px; border-radius: 50%; }
-        .dot-a { background: var(--primary-blue); }
-        .dot-b { background: var(--secondary-blue); }
-        
-        .chart-area { flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-end; min-height: 240px; position: relative; }
-        .x-axis { display: flex; justify-content: space-between; padding-top: 16px; margin-top: 24px; color: var(--text-dark); font-size: 0.75rem; font-weight: 700; padding: 16px 24px 0; }
-        .x-axis span { flex: 1; text-align: center; }
-
-        /* Donut Chart */
-        .donut-container { display: flex; flex-direction: column; align-items: center; padding-top: 16px; }
-        .donut { position: relative; width: 200px; height: 200px; border-radius: 50%; margin-bottom: 40px; }
-        .donut-inner { position: absolute; width: 150px; height: 150px; background: white; border-radius: 50%; top: 25px; left: 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
-        .donut-val { font-size: 2rem; font-weight: 800; color: var(--primary-blue); letter-spacing: -0.02em; line-height: 1; }
-        .donut-lbl { font-size: 0.65rem; font-weight: 700; color: var(--text-dark); margin-top: 4px; letter-spacing: 0.05em; }
-
-        .turnout-stats { width: 100%; display: flex; flex-direction: column; gap: 16px; }
-        .t-stat { display: flex; justify-content: space-between; align-items: center; }
-        .t-stat-label { font-size: 0.875rem; font-weight: 500; color: var(--text-gray); }
-        .t-stat-val { font-size: 0.875rem; font-weight: 700; color: var(--primary-blue); }
-
-        /* Bottom Row */
-        .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; }
-        .section-title { font-size: 1.25rem; font-weight: 700; color: var(--primary-blue); }
-        .view-all { font-size: 0.875rem; font-weight: 600; color: var(--secondary-blue); display: flex; align-items: center; gap: 4px; transition: color 0.15s; }
-        .view-all:hover { color: var(--primary-blue); }
-
-        .candidates-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-        .cand-card { background: #f9fafb; padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 16px; transition: transform 0.2s, box-shadow 0.2s; border: 1px solid transparent; }
-        .cand-card:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-color: var(--border-color); background: white; }
-        .cand-img-wrap { position: relative; width: 64px; height: 64px; border-radius: 8px; flex-shrink: 0; }
-        .cand-img-wrap img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; background: #e5e7eb; }
-        .badge-lead { position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); background: var(--primary-blue); color: white; font-size: 0.6rem; font-weight: 800; padding: 2px 8px; border-radius: 4px; box-shadow: 0 0 0 2px #f9fafb; letter-spacing: 0.05em; }
-        .cand-card:hover .badge-lead { box-shadow: 0 0 0 2px white; }
-        
-        .cand-info { flex-grow: 1; }
-        .cand-name { font-weight: 700; font-size: 1rem; color: var(--text-dark); margin-bottom: 2px; }
-        .cand-party { font-size: 0.75rem; color: var(--text-gray); margin-bottom: 6px; font-weight: 500; }
-        .cand-votes { font-size: 0.875rem; font-weight: 700; color: var(--primary-blue); }
-        
-        .margin-badge { background: #feeded; color: #9f4939; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; white-space: nowrap; align-self: flex-end; margin-bottom: 4px; }
-
-        /* Empty State */
-        .empty-state { text-align: center; padding: 60px 20px; background: white; border-radius: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .empty-state i { font-size: 3rem; color: var(--text-light); margin-bottom: 16px; }
-        .empty-state h3 { font-size: 1.5rem; font-weight: 700; color: var(--primary-blue); margin-bottom: 8px; }
-        .empty-state p { color: var(--text-gray); }
-
-        @media (max-width: 1024px) {
-            .stats-row { grid-template-columns: repeat(2, 1fr); }
-            .middle-row { grid-template-columns: 1fr; }
-            .candidates-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 768px) {
-            .stats-row, .candidates-grid { grid-template-columns: 1fr; }
-            .page-header { flex-direction: column; align-items: flex-start; gap: 16px; }
-            .header-actions { width: 100%; justify-content: space-between; }
-        }
-    </style>
+    <title>Election Results - NirvachanSetu</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/output.css">
+    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/images/favicon.ico">
 </head>
-<body>
+<body class="bg-background font-inter text-on-surface">
 
-    <main class="main-content container">
-        
+    <!-- Sidebar Overlay (mobile) -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar">
+        <div class="p-6">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.0 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="font-manrope text-lg font-bold text-primary leading-tight">NirvachanSetu</h1>
+                    <p class="text-xs text-on-surface-variant">Election Portal</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl mb-6">
+                <div class="avatar">
+                    ${fn:substring(user.fullName, 0, 1)}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-on-surface truncate">${user.fullName}</p>
+                    <p class="text-xs text-on-surface-variant truncate">${user.email}</p>
+                </div>
+            </div>
+
+            <nav class="flex flex-col gap-1">
+                <a href="${pageContext.request.contextPath}/voter/dashboard" class="sidebar-link">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="${pageContext.request.contextPath}/voter/candidates" class="sidebar-link">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                    Candidates
+                </a>
+                <a href="${pageContext.request.contextPath}/voter/cast-vote" class="sidebar-link">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                    </svg>
+                    Cast Vote
+                </a>
+                <a href="${pageContext.request.contextPath}/voter/results" class="sidebar-link-active">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    Results
+                </a>
+                <div class="divider my-4"></div>
+                <a href="${pageContext.request.contextPath}/voter/profile" class="sidebar-link">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    My Profile
+                </a>
+                <a href="${pageContext.request.contextPath}/logout" class="sidebar-link text-red-500">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                    </svg>
+                    Logout
+                </a>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Navbar -->
+        <header class="navbar rounded-xl mb-6">
+            <div class="flex items-center gap-3">
+                <button id="sidebar-toggle" class="btn-icon lg:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+                <div>
+                    <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+                        <a href="${pageContext.request.contextPath}/voter/dashboard" class="hover:text-primary transition-colors">Dashboard</a>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                        <span class="text-on-surface font-medium">Results</span>
+                    </div>
+                    <h2 class="font-manrope text-xl font-bold text-on-surface">Election Results</h2>
+                </div>
+            </div>
+            <button onclick="window.print()" class="btn-outline btn-sm hidden md:inline-flex">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                </svg>
+                Print
+            </button>
+        </header>
+
         <c:choose>
-            <c:when test="${not empty dashboardStats and dashboardStats.totalSeats > 0}">
-                
-                <!-- Page Header -->
-                <div class="page-header">
-                    <div>
-                        <div class="title-sub">LIVE ELECTION FEED</div>
-                        <h1 class="title-main">National Results Dashboard</h1>
-                    </div>
-                    <div class="header-actions">
-                        <div class="live-badge">
-                            <span class="live-dot"></span> Live Updates: <c:out value="${dashboardStats.lastUpdated}" default="--:--" />
-                        </div>
-                        <button class="btn-export">
-                            <i class="fa-solid fa-download"></i> Export Report
-                        </button>
-                    </div>
-                </div>
+            <c:when test="${empty completedElections}">
 
-                <!-- 4 Stats Cards -->
-                <c:set var="declaredPercent" value="${(dashboardStats.declared * 100.0) / dashboardStats.totalSeats}" />
-                <c:set var="leadingPercent" value="${(dashboardStats.leading * 100.0) / dashboardStats.totalSeats}" />
-                <div class="stats-row">
-                    <div class="stat-card">
-                        <div>
-                            <div class="stat-label">Total Seats</div>
-                            <div class="stat-value"><c:out value="${dashboardStats.totalSeats}" /></div>
-                        </div>
-                        <div class="stat-bar-wrapper">
-                            <div class="stat-bar bar-full"></div>
-                        </div>
+                <!-- No Results Available -->
+                <div class="card text-center py-16 px-6 animate-fade-in-up">
+                    <div class="w-20 h-20 bg-surface-container-low rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-on-surface-variant opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
                     </div>
-                    <div class="stat-card">
-                        <div>
-                            <div class="stat-label">Declared</div>
-                            <div class="stat-value"><c:out value="${dashboardStats.declared}" /></div>
-                        </div>
-                        <div class="stat-bar-wrapper">
-                            <div class="stat-bar bar-partial js-stat-bar" data-width="${declaredPercent}"></div>
-                        </div>
+                    <h3 class="font-manrope text-xl font-semibold text-on-surface mb-2">Results Not Yet Published</h3>
+                    <p class="text-on-surface-variant max-w-md mx-auto">
+                        Election results have not been published yet. Results will be made available after the vote counting process is complete and officially certified by the Election Commission.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-3 justify-center mt-6">
+                        <a href="${pageContext.request.contextPath}/voter/dashboard" class="btn-primary justify-center mx-auto">
+                            Return to Dashboard
+                        </a>
                     </div>
-                    <div class="stat-card">
-                        <div>
-                            <div class="stat-label">Leading</div>
-                            <div class="stat-value"><c:out value="${dashboardStats.leading}" /></div>
-                        </div>
-                        <div class="stat-bar-wrapper">
-                            <div class="stat-bar bar-leading js-stat-bar" data-width="${leadingPercent}"></div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div>
-                            <div class="stat-label">Voter Turnout</div>
-                            <div class="stat-value"><c:out value="${dashboardStats.voterTurnout}" />%</div>
-                        </div>
-                        <div class="stat-bar-wrapper">
-                            <div class="stat-bar bar-turnout js-stat-bar" data-width="${dashboardStats.voterTurnout}"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Middle Section: Charts -->
-                <div class="middle-row">
-                    <!-- Party Distribution -->
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <h2 class="card-title">Party-wise Vote Distribution</h2>
-                        </div>
-                        <div class="chart-area">
-                            <c:if test="${empty partyDistributions}">
-                                <p style="text-align:center; color: var(--text-gray); margin:auto;">No party data available yet.</p>
-                            </c:if>
-                            <c:if test="${not empty partyDistributions}">
-                                <div class="x-axis">
-                                    <c:forEach var="party" items="${partyDistributions}">
-                                        <span><c:out value="${party.name}" /></span>
-                                    </c:forEach>
-                                </div>
-                            </c:if>
-                        </div>
-                    </div>
-
-                    <!-- Constituency Turnout -->
-                    <div class="chart-card">
-                        <h2 class="card-title">Constituency Turnout</h2>
-                        <div class="donut-container">
-c                            <div class="donut" data-turnout="${dashboardStats.voterTurnout}">
-                                <div class="donut-inner">
-                                    <span class="donut-val"><c:out value="${dashboardStats.voterTurnout}" />%</span>
-                                    <span class="donut-lbl">OVERALL</span>
-                                </div>
-                            </div>
-                            <div class="turnout-stats">
-                                <div class="t-stat">
-                                    <span class="t-stat-label">Rural Areas</span>
-                                    <span class="t-stat-val"><c:out value="${dashboardStats.ruralTurnout}" />%</span>
-                                </div>
-                                <div class="t-stat">
-                                    <span class="t-stat-label">Urban Centers</span>
-                                    <span class="t-stat-val"><c:out value="${dashboardStats.urbanTurnout}" />%</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Leading Candidates Section -->
-                <div class="section-header">
-                    <h2 class="section-title">Leading Candidates</h2>
-                    <a href="#" class="view-all">View All Constituencies</a>
-                </div>
-                
-                <div class="candidates-grid">
-                    <c:choose>
-                        <c:when test="${not empty leadingCandidates}">
-                            <c:forEach var="candidate" items="${leadingCandidates}">
-                                <div class="cand-card">
-                                    <div class="cand-img-wrap">
-                                        <img src="https://ui-avatars.com/api/?name=${candidate.name}&background=0D8ABC&color=fff" alt="Candidate">
-                                        <span class="badge-lead">LEAD</span>
-                                    </div>
-                                    <div class="cand-info">
-                                        <div class="cand-name"><c:out value="${candidate.name}" /></div>
-                                        <div class="cand-party"><c:out value="${candidate.party}" /> &bull; <c:out value="${candidate.constituency}" /></div>
-                                        <div class="cand-votes"><c:out value="${candidate.votes}" /> votes</div>
-                                    </div>
-                                    <div class="margin-badge">+<c:out value="${candidate.margin}" /> margin</div>
-                                </div>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <p style="grid-column: 1 / -1; text-align: center; color: var(--text-gray);">No leading candidate data available at this time.</p>
-                        </c:otherwise>
-                    </c:choose>
                 </div>
 
             </c:when>
             <c:otherwise>
-                <div class="empty-state">
-                    <i class="fa-solid fa-chart-bar"></i>
-                    <h3>No Results Available</h3>
-                    <p>The election counting has not started or data is temporarily unavailable. Please check back later.</p>
-                </div>
+
+                <!-- Election Results -->
+                <c:forEach var="election" items="${completedElections}" varStatus="loop">
+
+                    <c:set var="candidates" value="${electionResults[election]}" />
+                    <c:set var="totalVotes" value="${voteCounts[election.id]}" />
+
+                    <!-- Election Header Card -->
+                    <div class="card mb-6 animate-fade-in">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div>
+                                <h3 class="font-manrope text-lg font-bold text-on-surface">${election.name}</h3>
+                                <div class="flex items-center gap-3 mt-2">
+                                    <c:choose>
+                                        <c:when test="${election.electionType == 'HOR'}"><span class="badge-blue">House of Representatives</span></c:when>
+                                        <c:when test="${election.electionType == 'PROVINCIAL'}"><span class="badge-orange">Provincial</span></c:when>
+                                        <c:otherwise><span class="badge-green">Local</span></c:otherwise>
+                                    </c:choose>
+                                    <span class="text-xs text-on-surface-variant">${election.startDateFormatted} - ${election.endDateFormatted}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="badge badge-green">Published</span>
+                                <span class="text-sm text-on-surface-variant">Total Votes: <strong class="text-on-surface">${empty totalVotes ? 0 : totalVotes}</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <c:if test="${not empty candidates}">
+
+                        <!-- Winner Highlight -->
+                        <c:if test="${candidates[0].totalVotes > 0}">
+                        <div class="bg-gradient-primary rounded-2xl p-6 md:p-8 mb-6 text-white relative overflow-hidden animate-fade-in-up">
+                            <div class="absolute top-0 right-0 w-48 h-48 bg-white opacity-5 rounded-full -translate-y-1/2 translate-x-1/4"></div>
+                            <div class="relative z-10">
+                                <div class="flex items-center gap-2 mb-4">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                                    </svg>
+                                    <span class="text-sm uppercase tracking-wider opacity-80">Election Winner</span>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="avatar avatar-2xl bg-white/20">
+                                        ${fn:substring(candidates[0].user.fullName, 0, 1)}
+                                    </div>
+                                    <div>
+                                        <h3 class="font-manrope text-2xl font-bold">${candidates[0].user.fullName}</h3>
+                                        <p class="opacity-90">${candidates[0].partyName} ${not empty candidates[0].symbol ? '- ' : ''}${candidates[0].symbol}</p>
+                                        <div class="flex items-center gap-4 mt-2">
+                                            <c:choose>
+                                                <c:when test="${totalVotes > 0}">
+                                                    <c:set var="winnerPct" value="${(candidates[0].totalVotes * 100.0) / totalVotes}" />
+                                                    <span class="text-2xl font-bold">${candidates[0].totalVotes} votes</span>
+                                                    <span class="bg-white/20 rounded-full px-3 py-1 text-sm font-medium">${winnerPct < 1 ? '0' : ''}${winnerPct}%</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span class="text-2xl font-bold">${candidates[0].totalVotes} votes</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </c:if>
+
+                        <!-- Results Table -->
+                        <div class="table-container mb-6 animate-fade-in">
+                            <div class="table-header flex items-center gap-4">
+                                <span class="flex-1">Rank</span>
+                                <span class="flex-1">Candidate</span>
+                                <span class="flex-1 hidden md:block">Party</span>
+                                <span class="text-right w-24">Votes</span>
+                                <span class="text-right w-20 hidden sm:block">Share</span>
+                            </div>
+
+                            <c:forEach var="cand" items="${candidates}" varStatus="rank">
+                                <c:choose>
+                                    <c:when test="${totalVotes > 0}">
+                                        <c:set var="pct" value="${(cand.totalVotes * 100.0) / totalVotes}" />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="pct" value="0" />
+                                    </c:otherwise>
+                                </c:choose>
+
+                                <div class="table-row">
+                                    <div class="flex items-center gap-4">
+                                        <!-- Rank -->
+                                        <div class="flex-1 flex items-center gap-2">
+                                            <span class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0
+                                                ${rank.index == 0 ? 'bg-yellow-100 text-yellow-700' : rank.index == 1 ? 'bg-gray-100 text-gray-600' : rank.index == 2 ? 'bg-orange-100 text-orange-700' : 'bg-surface-container-low text-on-surface-variant'}">
+                                                ${rank.index + 1}
+                                            </span>
+                                        </div>
+
+                                        <!-- Candidate -->
+                                        <div class="flex-1 flex items-center gap-2 min-w-0">
+                                            <div class="avatar avatar-sm flex-shrink-0">
+                                                ${fn:substring(cand.user.fullName, 0, 1)}
+                                            </div>
+                                            <span class="text-sm font-medium truncate">${cand.user.fullName}</span>
+                                        </div>
+
+                                        <!-- Party -->
+                                        <div class="flex-1 hidden md:block">
+                                            <span class="text-sm text-on-surface-variant">${cand.partyName}</span>
+                                        </div>
+
+                                        <!-- Votes -->
+                                        <div class="text-right w-24">
+                                            <span class="text-sm font-semibold">${cand.totalVotes}</span>
+                                        </div>
+
+                                        <!-- Share -->
+                                        <div class="text-right w-20 hidden sm:block">
+                                            <span class="text-sm font-medium ${rank.index == 0 ? 'text-green-600' : 'text-on-surface-variant'}">${pct < 1 ? '0' : ''}${pct}%</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Vote Bar -->
+                                    <div class="mt-3">
+                                        <div class="progress-bar">
+                                            <div class="progress-bar-fill ${rank.index == 0 ? 'progress-bar-fill-green' : ''}" style="width: ${pct < 1 ? '0' : ''}${pct}%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
+
+                        <!-- Horizontal Bar Chart -->
+                        <div class="card mb-8">
+                            <h4 class="section-title text-base mb-4">Vote Distribution</h4>
+                            <div class="flex flex-col gap-4">
+                                <c:forEach var="cand" items="${candidates}" varStatus="rank">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-28 md:w-40 flex-shrink-0">
+                                            <p class="text-sm font-medium text-on-surface truncate">${cand.user.fullName}</p>
+                                            <p class="text-xs text-on-surface-variant truncate">${cand.partyName}</p>
+                                        </div>
+                                        <div class="flex-1">
+                                            <c:choose>
+                                                <c:when test="${rank.index == 0}">
+                                                    <div class="chart-bar chart-bar-green" style="width: ${pct < 1 ? '0' : ''}${pct}%">
+                                                        <span class="text-xs font-semibold text-white whitespace-nowrap">${pct < 1 ? '0' : ''}${pct}%</span>
+                                                    </div>
+                                                </c:when>
+                                                <c:when test="${rank.index == 1}">
+                                                    <div class="chart-bar" style="width: ${pct < 1 ? '0' : ''}${pct}%">
+                                                        <span class="text-xs font-semibold text-white whitespace-nowrap">${pct < 1 ? '0' : ''}${pct}%</span>
+                                                    </div>
+                                                </c:when>
+                                                <c:when test="${rank.index == 2}">
+                                                    <div class="chart-bar chart-bar-orange" style="width: ${pct < 1 ? '0' : ''}${pct}%">
+                                                        <span class="text-xs font-semibold text-white whitespace-nowrap">${pct < 1 ? '0' : ''}${pct}%</span>
+                                                    </div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="chart-bar chart-bar-purple" style="width: ${pct < 1 ? '0' : ''}${pct}%">
+                                                        <span class="text-xs font-semibold text-white whitespace-nowrap">${pct < 1 ? '0' : ''}${pct}%</span>
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                        <div class="w-16 text-right flex-shrink-0">
+                                            <span class="text-sm font-semibold text-on-surface">${cand.totalVotes}</span>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </div>
+
+                    </c:if>
+                    <c:if test="${empty candidates}">
+                        <div class="card text-center py-8 mb-8">
+                            <p class="text-sm text-on-surface-variant">No candidate data available for this election.</p>
+                        </div>
+                    </c:if>
+
+                </c:forEach>
+
             </c:otherwise>
         </c:choose>
 
+        <!-- Footer -->
+        <footer class="text-center py-6 text-sm text-on-surface-variant mt-8">
+            <p>&copy; 2025 NirvachanSetu &mdash; Election Commission of Nepal. All rights reserved.</p>
+        </footer>
     </main>
 
-    <script>
-        document.querySelectorAll('.js-stat-bar').forEach(function (bar) {
-            var width = parseFloat(bar.getAttribute('data-width'));
-            if (!isNaN(width)) {
-                bar.style.width = Math.max(0, Math.min(100, width)) + '%';
-            }
-        });
-
-        document.querySelectorAll('.donut[data-turnout]').forEach(function (donut) {
-            var turnout = parseFloat(donut.getAttribute('data-turnout'));
-            if (!isNaN(turnout)) {
-                turnout = Math.max(0, Math.min(100, turnout));
-                donut.style.background = 'conic-gradient(var(--primary-blue) 0% ' + turnout + '%, #f3f4f6 ' + turnout + '% 100%)';
-            }
-        });
-    </script>
+    <script src="${pageContext.request.contextPath}/js/app.js"></script>
 </body>
 </html>

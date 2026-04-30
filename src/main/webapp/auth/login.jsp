@@ -1,176 +1,209 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - NirvachanSetu</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f1f4f8;
-        }
-        .bg-dark-blue {
-            background-color: #1a2a5c;
-        }
-        .text-dark-blue {
-            color: #1a2a5c;
-        }
-        .border-dark-blue {
-            border-color: #1a2a5c;
-        }
-        .left-panel-bg {
-            background: linear-gradient(135deg, #162450 0%, #1c2e64 45%, #253a7a 55%, #162450 100%);
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/output.css" rel="stylesheet">
 </head>
-<body class="min-h-screen flex flex-col justify-between">
-    
-    <!-- Main Content wrapper -->
-    <div class="flex-grow flex items-center justify-center p-6 relative relative z-10 w-full mt-4">
-        <!-- Main Form Card -->
-        <div class="max-w-[950px] w-full bg-white rounded-2xl shadow-xl flex flex-col md:flex-row overflow-hidden border border-gray-100 min-h-[550px]">
-            
-            <!-- Left Side / Branding -->
-            <div class="left-panel-bg text-white p-12 md:w-1/2 flex flex-col justify-between relative overflow-hidden">
-                <!-- Decorative Glow/Lines (Subtle representation) -->
-                <div class="absolute inset-0 z-0">
-                    <div class="absolute top-[40%] left-[-10%] w-[120%] h-px bg-white opacity-5 transform -rotate-12"></div>
-                    <div class="absolute top-[60%] left-[-10%] w-[120%] h-px bg-white opacity-5 transform rotate-6"></div>
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500 rounded-full blur-[80px] opacity-20"></div>
-                </div>
+<body class="font-inter text-on-surface min-h-screen">
 
-                <!-- Logo Section -->
-                <div class="relative z-10 flex items-center space-x-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+    <div class="min-h-screen flex flex-col lg:flex-row">
+
+        <!-- Left Panel - Branding -->
+        <div class="hidden lg:flex lg:w-1/2 xl:w-[45%] bg-gradient-to-br from-[#00236f] via-[#1e3a8a] to-[#0f172a] relative overflow-hidden flex-col justify-between p-8 xl:p-12">
+            <!-- Background decorative elements -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div class="absolute bottom-0 left-0 w-72 h-72 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+            <div class="absolute top-1/2 left-1/2 w-48 h-48 bg-white/3 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+
+            <!-- Logo -->
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-2">
+                    <svg class="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" rx="1"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1"/>
+                        <rect x="8.5" y="14" width="7" height="7" rx="1"/>
                     </svg>
-                    <span class="text-xl font-bold tracking-tight">NirvachanSetu</span>
+                    <span class="font-manrope font-bold text-2xl text-white">NirvachanSetu</span>
                 </div>
-
-                <!-- Hero Text -->
-                <div class="relative z-10 mt-12 mb-12">
-                    <h1 class="text-4xl font-bold mb-6 leading-tight max-w-sm">Empowering the<br/>Digital Democracy.</h1>
-                    <p class="text-blue-200 text-sm leading-relaxed max-w-sm">
-                        Access your secure voting portal, track candidates, and participate in the future of governance.
-                    </p>
-                </div>
-                
-                <!-- Bottom Info Box -->
-                <div class="relative z-10 mt-auto bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5 shadow-sm">
-                    <div class="flex items-center space-x-3 mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-300" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                        <h3 class="font-semibold text-sm tracking-wide">Secure Authentication</h3>
-                    </div>
-                    <p class="text-blue-100/70 text-xs leading-relaxed pr-6">
-                        Your identity is protected by multi-layer encryption and EC-standard security protocols.
-                    </p>
-                </div>
+                <p class="text-secondary-fixed/60 text-sm ml-[52px]">Election Commission Portal</p>
             </div>
 
-            <!-- Right Side / Login Form -->
-            <div class="p-10 md:p-14 md:w-1/2 flex flex-col justify-center bg-white z-10">
-                <div class="mb-8">
-                    <h2 class="text-[26px] font-bold text-gray-900 mb-2 text-dark-blue">Welcome Back</h2>
-                    <p class="text-gray-500 text-sm">Please enter your credentials to access your account.</p>
+            <!-- Center content -->
+            <div class="relative z-10 flex-1 flex flex-col justify-center max-w-md">
+                <h1 class="font-manrope font-bold text-4xl xl:text-5xl text-white leading-tight mb-6">
+                    Empowering the Digital Democracy.
+                </h1>
+                <p class="text-secondary-fixed/80 text-base xl:text-lg leading-relaxed">
+                    Access your secure voting portal, track candidates, and participate in the future of governance.
+                </p>
+            </div>
+
+            <!-- Security badge -->
+            <div class="relative z-10 glass-panel rounded-2xl p-5 max-w-sm">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-secondary-fixed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <polyline points="9 12 11 14 15 10"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-manrope font-semibold text-white text-sm">Secure Authentication</p>
+                        <p class="text-secondary-fixed/70 text-xs mt-1 leading-relaxed">Your identity is protected by multi-layer encryption and EC-standard security protocols.</p>
+                    </div>
                 </div>
-                
-                <form action="AuthServlet" method="POST" class="flex-grow">
-                    <input type="hidden" name="action" value="login">
-                    
-                    <!-- Voter ID / Email Container -->
-                    <div class="mb-5">
-                        <label class="block text-xs font-bold text-gray-800 mb-2" for="username">Voter ID / Email</label>
-                        <div class="relative flex items-center bg-gray-100 rounded-lg border border-transparent focus-within:bg-white focus-within:border-gray-300 focus-within:ring-2 focus-within:ring-[#1a2a5c] transition-all">
-                            <div class="pl-4 pr-3 text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                            <input type="text" id="username" name="username" placeholder="Enter Voter ID or Email" 
-                                class="w-full py-3 bg-transparent text-sm text-gray-800 placeholder-gray-400 focus:outline-none" required>
+            </div>
+        </div>
+
+        <!-- Right Panel - Login Form -->
+        <div class="flex-1 flex flex-col justify-center items-center bg-[#f8f9fb] px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+
+            <!-- Mobile logo -->
+            <div class="lg:hidden flex items-center gap-2 mb-8">
+                <svg class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="8.5" y="14" width="7" height="7" rx="1"/>
+                </svg>
+                <span class="font-manrope font-bold text-xl text-primary">NirvachanSetu</span>
+            </div>
+
+            <div class="w-full max-w-md">
+                <!-- Heading -->
+                <div class="mb-8">
+                    <h2 class="font-manrope font-bold text-3xl text-on-surface mb-2">Welcome Back</h2>
+                    <p class="text-on-surface-variant text-sm">Please enter your credentials to access your account.</p>
+                </div>
+
+                <!-- Error Message -->
+                <c:if test="${not empty error}">
+                    <div class="mb-6 p-4 rounded-xl bg-red-50 flex items-start gap-3">
+                        <svg class="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="15" y1="9" x2="9" y2="15"/>
+                            <line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
+                        <div>
+                            <p class="text-sm font-semibold text-red-800">Login Failed</p>
+                            <p class="text-sm text-red-600 mt-0.5">${error}</p>
                         </div>
                     </div>
-                    
-                    <!-- Password Container -->
-                    <div class="mb-5">
-                        <div class="flex justify-between items-center mb-2">
-                            <label class="block text-xs font-bold text-gray-800" for="password">Password</label>
-                            <a href="#" class="text-xs font-bold text-blue-600 tracking-tight text-dark-blue hover:text-blue-800">Forgot Password?</a>
-                        </div>
-                        <div class="relative flex items-center bg-gray-100 rounded-lg border border-transparent focus-within:bg-white focus-within:border-gray-300 focus-within:ring-2 focus-within:ring-[#1a2a5c] transition-all">
-                            <div class="pl-4 pr-3 text-gray-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                </c:if>
+
+                <!-- Success Message -->
+                <c:if test="${not empty success}">
+                    <div class="mb-6 p-4 rounded-xl bg-green-50 flex items-start gap-3">
+                        <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        <p class="text-sm text-green-700">${success}</p>
+                    </div>
+                </c:if>
+
+                <!-- Login Form -->
+                <form method="POST" action="${pageContext.request.contextPath}/login" class="space-y-5">
+                    <!-- Voter ID / Email -->
+                    <div>
+                        <label for="identifier" class="block text-sm font-medium text-on-surface mb-1.5">Voter ID / Email</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-on-surface-variant/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                    <polyline points="10 9 9 9 8 9"/>
                                 </svg>
                             </div>
-                            <input type="password" id="password" name="password" placeholder="••••••••" 
-                                class="w-full py-3 bg-transparent text-sm text-gray-800 placeholder-gray-400 focus:outline-none tracking-widest" required>
+                            <input type="text" id="identifier" name="email" required
+                                   class="input-field w-full pl-11 pr-4 py-3 rounded-xl text-sm"
+                                   placeholder="Enter your email address"
+                                   autocomplete="username">
                         </div>
                     </div>
 
-                    <!-- Remember Me -->
-                    <div class="mb-8 flex items-center">
-                        <input type="checkbox" id="remember" name="remember" class="h-4 w-4 text-[#1a2a5c] border-gray-300 rounded focus:ring-[#1a2a5c] cursor-pointer">
-                        <label for="remember" class="ml-2 block text-sm text-gray-700 cursor-pointer">
-                            Remember this device
-                        </label>
-                    </div>
-                    
-                    <!-- Submit Button -->
-                    <button type="submit" class="w-full bg-dark-blue text-white font-medium py-3.5 px-4 rounded-lg hover:bg-blue-900 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1a2a5c] flex justify-center items-center font-semibold text-sm tracking-wide">
-                        Login
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
-                    </button>
-                    
-                    <div class="mt-8 border-t border-gray-100 pt-6">
-                        <p class="text-center text-sm text-gray-600 mb-6">
-                            New to the platform? 
-                            <a href="${pageContext.request.contextPath}/auth/register.jsp" class="font-bold text-dark-blue hover:text-blue-800 transition-colors">Register Now</a>
-                        </p>
-                        
-                        <div class="flex justify-center items-center space-x-6 text-[10px] text-gray-500 font-bold uppercase tracking-widest">
-                            <a href="#" class="flex items-center hover:text-gray-700 transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                    <!-- Password -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-on-surface mb-1.5">Password</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-on-surface-variant/50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                                 </svg>
-                                LANGUAGE: ENGLISH
-                            </a>
-                            <a href="#" class="flex items-center hover:text-gray-700 transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                            </div>
+                            <input type="password" id="password" name="password" required
+                                   class="input-field w-full pl-11 pr-12 py-3 rounded-xl text-sm"
+                                   placeholder="Enter your password"
+                                   autocomplete="current-password">
+                            <button type="button" onclick="togglePassword()" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-on-surface-variant/50 hover:text-on-surface-variant transition-colors">
+                                <svg id="eyeIcon" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
                                 </svg>
-                                SUPPORT
-                            </a>
+                            </button>
                         </div>
                     </div>
+
+                    <!-- Forgot Password + Remember -->
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="rememberDevice" class="w-4 h-4 rounded border-surface-container-low text-primary focus:ring-primary/20">
+                            <span class="text-sm text-on-surface-variant">Remember device</span>
+                        </label>
+                        <a href="${pageContext.request.contextPath}/forgot-password" class="text-sm text-primary hover:text-primary-container font-medium transition-colors">Forgot Password?</a>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                            class="btn-primary w-full py-3 px-4 rounded-xl font-manrope font-semibold text-sm text-white flex items-center justify-center gap-2 transition-all duration-200 hover:shadow-lg hover:shadow-primary/20">
+                        Login
+                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </button>
                 </form>
+
+                <!-- Register Link -->
+                <div class="mt-8 text-center">
+                    <p class="text-sm text-on-surface-variant">
+                        New to the platform?
+                        <a href="${pageContext.request.contextPath}/register" class="text-primary hover:text-primary-container font-semibold transition-colors">Register Now</a>
+                    </p>
+                </div>
+
+                <!-- Footer links -->
+                <div class="mt-8 pt-6 flex items-center justify-center gap-4">
+                    <a href="#" class="text-xs text-on-surface-variant/60 hover:text-on-surface-variant font-inter transition-colors">Language</a>
+                    <span class="text-on-surface-variant/20">&#x2022;</span>
+                    <a href="${pageContext.request.contextPath}/support" class="text-xs text-on-surface-variant/60 hover:text-on-surface-variant font-inter transition-colors">Support</a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Global Footer -->
-    <footer class="w-full border-t border-gray-200 mt-auto bg-transparent">
-        <div class="max-w-7xl mx-auto px-8 py-6 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 font-medium">
-            <div class="mb-4 md:mb-0 text-center md:text-left">
-                <div class="font-bold text-gray-800 mb-1 text-sm">NirvachanSetu</div>
-                <p>© 2026 Election Commission. All rights reserved.</p>
-            </div>
-            
-            <div class="flex flex-wrap justify-center space-x-6">
-                <a href="#" class="hover:text-gray-900 transition-colors py-1">Privacy Policy</a>
-                <a href="#" class="hover:text-gray-900 transition-colors py-1">Terms of Service</a>
-                <a href="#" class="hover:text-gray-900 transition-colors py-1">Accessibility</a>
-                <a href="#" class="hover:text-gray-900 transition-colors py-1">Contact Support</a>
-            </div>
-        </div>
-    </footer>
-
+    <script>
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+            } else {
+                input.type = 'password';
+                icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+            }
+        }
+    </script>
 </body>
 </html>

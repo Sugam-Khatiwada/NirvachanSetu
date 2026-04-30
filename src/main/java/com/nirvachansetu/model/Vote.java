@@ -21,7 +21,7 @@ public class Vote implements Serializable {
     private Election election;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "candidate_id", nullable = false)
+    @JoinColumn(name = "candidate_id")
     private Candidate candidate;
 
     @ManyToOne(fetch = FetchType.EAGER)

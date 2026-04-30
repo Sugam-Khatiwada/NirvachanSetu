@@ -60,6 +60,18 @@ public class VoteService {
                 throw new RuntimeException("You have already voted in this election.");
             }
 
+            // Handle NOTA (None of the Above)
+            if (candidateId == -1) {
+                // For NOTA, create a vote with null candidate reference
+                // We still record that the voter participated but chose no candidate
+                Vote vote = new Vote();
+                vote.setElection(election);
+                vote.setConstituency(em.getReference(com.nirvachansetu.model.Constituency.class, constituencyId));
+                vote.setVoter(em.getReference(com.nirvachansetu.model.User.class, voterId));
+                vote = voteDAO.save(vote);
+                return vote;
+            }
+
             // Validate candidate is in this election and constituency
             Candidate candidate = candidateDAO.findById(candidateId);
             if (candidate == null || !candidate.getElection().getId().equals(electionId)) {

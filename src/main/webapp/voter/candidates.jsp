@@ -144,18 +144,12 @@
                 <label>Constituency</label>
                 <select class="filter-select" onchange="window.location.href='?constituency=' + this.value + (new URLSearchParams(window.location.search).get('party') ? '&party=' + new URLSearchParams(window.location.search).get('party') : '')">
                     <option value="">All Constituencies</option>
-                    <c:forEach items="${constituencies}" var="c">
-                        <option value="${c.name}" ${param.constituency == c.name ? 'selected' : ''}>${c.name}</option>
-                    </c:forEach>
                 </select>
             </div>
             <div class="filter-group">
                 <label>Party</label>
                 <select class="filter-select" onchange="window.location.href='?party=' + this.value + (new URLSearchParams(window.location.search).get('constituency') ? '&constituency=' + new URLSearchParams(window.location.search).get('constituency') : '')">
                     <option value="">All Parties</option>
-                    <c:forEach items="${parties}" var="p">
-                        <option value="${p.partyName}" ${param.party == p.partyName ? 'selected' : ''}>${p.partyName}</option>
-                    </c:forEach>
                 </select>
             </div>
         </div>
@@ -179,7 +173,7 @@
                             <div class="card-large">
                                 <div class="card-large-img">
                                     <div class="badge-incumbent">${candidate.partyName} Leader</div>
-                                    <img src="${not empty candidate.user.profileImage ? candidate.user.profileImage : 'https://ui-avatars.com/api/?name=' += candidate.user.fullName += '&background=f3f4f6&color=1a4093'}" alt="${candidate.user.fullName}">
+                                    <img src="https://ui-avatars.com/api/?name=${candidate.user.fullName}&background=f3f4f6&color=1a4093&size=400" alt="${candidate.user.fullName}">
                                 </div>
                                 <div class="card-large-content">
                                     <div class="icon-top-right">
@@ -196,7 +190,7 @@
                                         <span class="tag">Leadership</span>
                                         <span class="tag">Community</span>
                                     </div>
-                                    <button class="btn-manifesto" onclick="window.location.href='${pageContext.request.contextPath}/voter/candidate?id=${candidate.id}'">
+                                    <button class="btn-manifesto" onclick="window.location.href='${pageContext.request.contextPath}/voter/candidates'">
                                         Read Full Profile <i class="fas fa-arrow-right"></i>
                                     </button>
                                 </div>
@@ -206,7 +200,7 @@
                             <!-- Small Card -->
                             <div class="card">
                                 <div class="card-img-wrapper">
-                                    <img src="${not empty candidate.user.profileImage ? candidate.user.profileImage : 'https://ui-avatars.com/api/?name=' += candidate.user.fullName += '&background=f3f4f6&color=1a4093'}" alt="${candidate.user.fullName}">
+                                    <img src="https://ui-avatars.com/api/?name=${candidate.user.fullName}&background=f3f4f6&color=1a4093&size=400" alt="${candidate.user.fullName}">
                                     <div class="card-img-overlay">
                                         <div class="card-party-overlay">${candidate.partyName}</div>
                                         <div class="card-name-overlay">${candidate.user.fullName}</div>
@@ -229,7 +223,7 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
-                                    <button class="btn-light" onclick="window.location.href='${pageContext.request.contextPath}/voter/candidate?id=${candidate.id}'">
+                                    <button class="btn-light" onclick="window.location.href='${pageContext.request.contextPath}/voter/candidates'">
                                         View Profile <i class="fas fa-external-link-alt"></i>
                                     </button>
                                 </div>
