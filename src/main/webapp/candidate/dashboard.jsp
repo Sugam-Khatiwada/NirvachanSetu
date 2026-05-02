@@ -4,603 +4,824 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NirvachanSetu - Candidate Dashboard</title>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/output.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidate Portal - NirvachanSetu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #1e1b4b; /* Dark Navy from mockup */
+            --sidebar-hover: #312e81;
+            --sidebar-active: #2563eb;
+            --bg-main: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --card-bg: #ffffff;
+            --primary: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+        }
 
-  <style>
-    :root {
-      --dash-bg: #f4f7fc;
-      --dash-surface: #ffffff;
-      --dash-border: #e7ebf3;
-      --dash-text: #0f172a;
-      --dash-muted: #64748b;
-      --dash-primary: #0f3a97;
-      --dash-primary-2: #1c4fd8;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
 
-    body {
-      background: radial-gradient(150% 150% at 0% 0%, #eef3ff 0%, #f6f8fc 40%, #f4f7fc 100%);
-      color: var(--dash-text);
-    }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    .candidate-shell {
-      max-width: 1380px;
-      margin: 0 auto;
-      padding: 1.1rem;
-    }
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 1.5rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.75rem;
+            max-width: 1600px;
+        }
 
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: 250px minmax(0, 1fr);
-      gap: 1rem;
-      align-items: start;
-    }
+        /* Top Bar Styling */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.5rem;
+        }
 
-    .panel {
-      border: 1px solid var(--dash-border);
-      border-radius: 1rem;
-      background: var(--dash-surface);
-      box-shadow: 0 10px 18px -14px rgba(15, 58, 151, 0.35);
-    }
+        .search-container {
+            position: relative;
+            width: 420px;
+        }
 
-    .content-col {
-      display: flex;
-      flex-direction: column;
-      gap: 0.95rem;
-    }
+        .search-container input {
+            width: 100%;
+            padding: 0.8rem 1.25rem 0.8rem 3rem;
+            border-radius: 2rem;
+            border: 1px solid var(--border);
+            background-color: #f1f5f9;
+            outline: none;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
 
-    .top-row {
-      display: grid;
-      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
-      gap: 0.95rem;
-    }
+        .search-container input:focus {
+            background-color: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+        }
 
-    .hero-card {
-      border-radius: 1rem;
-      color: white;
-      min-height: 205px;
-      background: radial-gradient(65% 130% at 105% 0%, rgba(255, 255, 255, 0.17) 0%, rgba(255, 255, 255, 0) 58%),
-            linear-gradient(135deg, #0d3488 0%, #1a4bbd 56%, #2f63dc 100%);
-      padding: 1.2rem;
-      position: relative;
-      overflow: hidden;
-    }
+        .search-container svg {
+            position: absolute;
+            left: 1.1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.15rem;
+            height: 1.15rem;
+            color: var(--text-secondary);
+        }
 
-    .hero-chip-wrap {
-      display: flex;
-      gap: 0.55rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.85rem;
-    }
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
 
-    .hero-chip {
-      border-radius: 9999px;
-      font-size: 0.66rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      font-weight: 800;
-      padding: 0.27rem 0.55rem;
-    }
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
 
-    .hero-chip.soft {
-      background: rgba(255, 255, 255, 0.19);
-      color: #dbe7ff;
-    }
+        .icon-btn:hover {
+            background-color: #f1f5f9;
+            color: var(--text-primary);
+        }
 
-    .hero-chip.warn {
-      color: #7c2d12;
-      background: #fcd34d;
-    }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            margin-left: 0.5rem;
+            padding-left: 1.25rem;
+            border-left: 1.5px solid var(--border);
+        }
 
-    .hero-title {
-      margin: 0;
-      font-size: clamp(1.35rem, 2.1vw, 2rem);
-      line-height: 1.16;
-      max-width: 620px;
-      font-weight: 800;
-    }
+        .user-info {
+            text-align: right;
+        }
 
-    .hero-actions {
-      margin-top: 1.2rem;
-      display: flex;
-      gap: 0.55rem;
-      flex-wrap: wrap;
-    }
+        .user-info h4 {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
 
-    .hero-btn {
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      background: rgba(255, 255, 255, 0.13);
-      color: white;
-      font-size: 0.78rem;
-      font-weight: 700;
-      border-radius: 0.65rem;
-      padding: 0.48rem 0.7rem;
-      text-decoration: none;
-    }
+        .user-info p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
 
-    .hero-btn.primary {
-      background: white;
-      color: #12337f;
-      border-color: white;
-    }
+        .user-avatar {
+            width: 2.75rem;
+            height: 2.75rem;
+            border-radius: 50%;
+            background-color: #f1f5f9;
+            border: 2px solid white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
 
-    .hero-meta {
-      position: absolute;
-      right: 1rem;
-      bottom: 1rem;
-      text-align: right;
-      font-size: 0.74rem;
-      color: #d8e4ff;
-    }
+        /* Dashboard Content Layout */
+        .dash-row-top {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+        }
 
-    .hero-meta strong {
-      display: block;
-      color: white;
-      font-size: 0.85rem;
-      margin-top: 0.18rem;
-    }
+        /* Hero Card */
+        .hero-card {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
 
-    .countdown-card {
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      min-height: 205px;
-    }
+        .hero-card::before {
+            content: "";
+            position: absolute;
+            right: -10%;
+            top: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            z-index: 1;
+        }
 
-    .countdown-card p {
-      margin: 0;
-      color: var(--dash-muted);
-      font-size: 0.74rem;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      font-weight: 700;
-    }
+        .status-chips {
+            display: flex;
+            gap: 0.75rem;
+            z-index: 2;
+        }
 
-    .count-circle {
-      width: 108px;
-      height: 108px;
-      border-radius: 9999px;
-      border: 7px solid #dbe6ff;
-      color: #12337f;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      margin: 0.75rem 0;
-      font-weight: 800;
-    }
+        .chip {
+            padding: 0.4rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
 
-    .count-circle span {
-      font-size: 2rem;
-      line-height: 1;
-    }
+        .chip.light {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
 
-    .count-circle small {
-      font-size: 0.62rem;
-      color: var(--dash-muted);
-      letter-spacing: 0.05em;
-    }
+        .chip.warning {
+            background-color: #fbbf24;
+            color: #1e1b4b;
+        }
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.75rem;
-    }
+        .hero-title {
+            font-size: 2rem;
+            font-weight: 800;
+            max-width: 540px;
+            line-height: 1.15;
+            z-index: 2;
+        }
 
-    .stat-card {
-      padding: 0.85rem;
-    }
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            z-index: 2;
+        }
 
-    .stat-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 0.5rem;
-    }
+        .btn {
+            padding: 0.85rem 1.75rem;
+            border-radius: 0.75rem;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .stat-dot {
-      width: 1.65rem;
-      height: 1.65rem;
-      border-radius: 0.5rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
+        .btn-white {
+            background-color: white;
+            color: #1e1b4b;
+        }
 
-    .dot-blue { background: #e3ebff; color: #12337f; }
-    .dot-green { background: #dcfce7; color: #166534; }
-    .dot-amber { background: #fef3c7; color: #92400e; }
-    .dot-purple { background: #ede9fe; color: #5b21b6; }
+        .btn-white:hover {
+            background-color: #f1f5f9;
+            transform: translateY(-1px);
+        }
 
-    .stat-label {
-      color: #64748b;
-      font-size: 0.73rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+        .btn-outline {
+            border: 1.5px solid rgba(255, 255, 255, 0.3);
+            color: white;
+        }
 
-    .stat-value {
-      margin-top: 0.25rem;
-      font-size: 1.4rem;
-      line-height: 1.1;
-      font-weight: 800;
-    }
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
 
-    .stat-sub {
-      margin-top: 0.2rem;
-      color: #64748b;
-      font-size: 0.72rem;
-      font-weight: 600;
-    }
+        .hero-submission {
+            position: absolute;
+            right: 2.5rem;
+            bottom: 2.5rem;
+            text-align: right;
+            opacity: 0.9;
+            z-index: 2;
+        }
 
-    .bottom-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
-      gap: 0.95rem;
-    }
+        .hero-submission label {
+            display: block;
+            font-size: 0.7rem;
+            margin-bottom: 0.25rem;
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
 
-    .section-card {
-      padding: 1rem;
-    }
+        .hero-submission span {
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
 
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.9rem;
-      gap: 0.7rem;
-    }
+        /* Countdown Card */
+        .countdown-card {
+            background-color: white;
+            border-radius: 1.5rem;
+            padding: 2.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
 
-    .section-head h3 {
-      margin: 0;
-      font-size: 1rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
+        .countdown-card h3 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            margin-bottom: 1.75rem;
+            font-weight: 800;
+        }
 
-    .section-head a {
-      color: #1d4ed8;
-      text-decoration: none;
-      font-size: 0.78rem;
-      font-weight: 700;
-    }
+        .progress-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) ${votePercentage > 0 ? votePercentage : 42}%, #f1f5f9 0%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.75rem;
+            position: relative;
+        }
 
-    .timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
+        .progress-circle::after {
+            content: "";
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            background-color: white;
+            border-radius: 50%;
+        }
 
-    .timeline-item {
-      display: grid;
-      grid-template-columns: 24px minmax(0, 1fr);
-      gap: 0.65rem;
-      align-items: start;
-    }
+        .progress-content {
+            position: relative;
+            z-index: 1;
+        }
 
-    .timeline-badge {
-      width: 24px;
-      height: 24px;
-      border-radius: 9999px;
-      background: #ecf2ff;
-      color: #1d4ed8;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.7rem;
-      margin-top: 1px;
-      font-weight: 700;
-    }
+        .progress-content span {
+            display: block;
+            font-size: 2.75rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+        }
 
-    .timeline-item h4 {
-      margin: 0;
-      font-size: 0.86rem;
-      font-weight: 700;
-      color: #0f172a;
-    }
+        .progress-content label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 800;
+            letter-spacing: 0.05em;
+        }
 
-    .timeline-item p {
-      margin: 0.15rem 0 0;
-      font-size: 0.75rem;
-      color: #64748b;
-      line-height: 1.45;
-    }
+        .election-date {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.35rem;
+        }
 
-    .heat-map {
-      height: 186px;
-      border: 1px dashed #d9e2fb;
-      border-radius: 0.9rem;
-      background: linear-gradient(180deg, #f7faff 0%, #eef4ff 100%);
-      position: relative;
-      overflow: hidden;
-    }
+        .election-phase {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
 
-    .map-shape {
-      position: absolute;
-      inset: 18px 18px 30px 18px;
-      background: #dfe8fa;
-      border-radius: 42% 58% 49% 51% / 40% 37% 63% 60%;
-    }
+        /* Statistics Cards Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+        }
 
-    .pin {
-      position: absolute;
-      width: 11px;
-      height: 11px;
-      border-radius: 9999px;
-      border: 2px solid white;
-    }
+        .stat-card {
+            background-color: white;
+            border-radius: 1.5rem;
+            padding: 1.75rem;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
 
-    .pin.blue { background: #1d4ed8; left: 44%; top: 44%; }
-    .pin.green { background: #16a34a; left: 62%; top: 34%; }
-    .pin.amber { background: #f59e0b; left: 72%; top: 62%; }
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
 
-    .competitor-list {
-      margin-top: 0.8rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.55rem;
-      max-height: 172px;
-      overflow: auto;
-    }
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
 
-    .competitor-item {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.5rem;
-      border: 1px solid #e8edf9;
-      border-radius: 0.65rem;
-      background: #fbfdff;
-      padding: 0.52rem 0.58rem;
-      font-size: 0.78rem;
-    }
+        .stat-icon {
+            width: 2.75rem;
+            height: 2.75rem;
+            border-radius: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .alert-strip {
-      padding: 0.72rem 0.85rem;
-      border-radius: 0.72rem;
-      font-size: 0.82rem;
-      border: 1px solid;
-      margin-bottom: 0.8rem;
-    }
+        .stat-icon.blue { background-color: #eff6ff; color: #3b82f6; }
+        .stat-icon.orange { background-color: #fff7ed; color: #f97316; }
+        .stat-icon.purple { background-color: #faf5ff; color: #a855f7; }
+        .stat-icon.green { background-color: #f0fdf4; color: #22c55e; }
 
-    .alert-error {
-      background: #fef2f2;
-      color: #b91c1c;
-      border-color: #fecaca;
-    }
+        .stat-trend {
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
 
-    .alert-success {
-      background: #f0fdf4;
-      color: #166534;
-      border-color: #bbf7d0;
-    }
+        .trend-up { color: var(--success); }
+        .trend-neutral { color: var(--text-secondary); }
 
-    @media (max-width: 1180px) {
-      .stats-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+        .stat-body label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
 
-      .top-row,
-      .bottom-row {
-        grid-template-columns: 1fr;
-      }
-    }
+        .stat-body h2 {
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
 
-    @media (max-width: 980px) {
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+        .stat-footer {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Bottom Grid: Milestones & Map */
+        .dash-row-bottom {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .section-card {
+            background-color: white;
+            border-radius: 1.5rem;
+            padding: 2.25rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+        }
+
+        .section-header a {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        /* Timeline Styling */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-marker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .marker-dot {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            z-index: 2;
+        }
+
+        .marker-dot.completed { background-color: #d1fae5; color: #059669; }
+        .marker-dot.active { background-color: #dbeafe; color: #2563eb; }
+        .marker-dot.pending { background-color: #f1f5f9; color: #94a3b8; }
+
+        .timeline-content {
+            padding-top: 0.35rem;
+        }
+
+        .timeline-content h4 {
+            font-size: 1rem;
+            font-weight: 800;
+            margin-bottom: 0.35rem;
+            color: var(--text-primary);
+        }
+
+        .timeline-content p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .timeline-date {
+            margin-left: auto;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            white-space: nowrap;
+            padding-top: 0.5rem;
+        }
+
+        /* Map Mockup Styling */
+        .map-container {
+            width: 100%;
+            height: 250px;
+            background-color: #f1f5f9;
+            border-radius: 1.25rem;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+        }
+
+        .map-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2.5px solid white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .map-dot.blue { background-color: #2563eb; top: 40%; left: 45%; }
+        .map-dot.orange { background-color: #f97316; top: 65%; left: 78%; }
+        .map-dot.gray { background-color: #64748b; top: 58%; left: 62%; }
+
+        .map-action {
+            margin-top: 1.75rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-create-post {
+            background-color: var(--sidebar-bg);
+            color: white;
+            padding: 0.85rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-create-post:hover {
+            transform: translateY(-1px);
+            background-color: #2e2a6e;
+        }
+
+        /* Custom Alert Styling */
+        .alert {
+            padding: 1.25rem;
+            border-radius: 1rem;
+            margin-bottom: 1.75rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: 1.5px solid;
+        }
+
+        .alert-error {
+            background-color: #fff1f2;
+            color: #be123c;
+            border-color: #fecdd3;
+        }
+
+        .alert-success {
+            background-color: #f0fdf4;
+            color: #15803d;
+            border-color: #bbf7d0;
+        }
+
+        @media (max-width: 1300px) {
+            .stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .dash-row-top, .dash-row-bottom {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
-<body class="font-inter">
+<body>
 
-<%-- ===== SHARED HEADER INCLUDE: START ===== --%>
-<jsp:include page="/layout/header.jsp" />
-<%-- ===== SHARED HEADER INCLUDE: END ===== --%>
-
-<main class="candidate-shell">
-  <div class="dashboard-grid">
-    <%-- ===== SIDEBAR MOVED TO LAYOUT INCLUDE: START ===== --%>
     <c:set var="activeCandidateNav" value="dashboard" />
     <jsp:include page="/layout/candidate-sidebar.jsp" />
-    <%-- ===== SIDEBAR MOVED TO LAYOUT INCLUDE: END ===== --%>
 
-    <%-- ===== DASHBOARD CONTENT AREA: START ===== --%>
-    <section class="content-col">
-      <c:if test="${not empty error}">
-        <div class="alert-strip alert-error"><c:out value="${error}" /></div>
-      </c:if>
-      <c:if test="${not empty sessionScope.error}">
-        <div class="alert-strip alert-error"><c:out value="${sessionScope.error}" /></div>
-        <% request.getSession().removeAttribute("error"); %>
-      </c:if>
-      <c:if test="${not empty sessionScope.success}">
-        <div class="alert-strip alert-success"><c:out value="${sessionScope.success}" /></div>
-        <% request.getSession().removeAttribute("success"); %>
-      </c:if>
-
-      <div class="top-row">
-        <article class="hero-card panel">
-          <div class="hero-chip-wrap">
-            <span class="hero-chip soft">Application Status</span>
-            <span class="hero-chip warn">
-              <c:out value="${application != null ? application.status : 'VERIFICATION PENDING'}" />
-            </span>
-          </div>
-
-          <h1 class="hero-title">
-            Your nomination for the
-            <c:out value="${constituency != null ? constituency.name : 'Selected Constituency'}" /> Constituency.
-          </h1>
-
-          <div class="hero-actions">
-            <a href="${pageContext.request.contextPath}/candidate/application" class="hero-btn primary">Review Application</a>
-            <a href="${pageContext.request.contextPath}/candidate/profile" class="hero-btn">Support Helpdesk</a>
-          </div>
-
-          <div class="hero-meta">
-            Submission Date
-            <strong><c:out value="${application != null ? application.appliedAtFormatted : 'Awaiting Submission'}" /></strong>
-          </div>
-        </article>
-
-        <article class="panel countdown-card">
-          <p>Election Countdown</p>
-          <div class="count-circle">
-            <span><c:out value="${votePercentage > 0 ? votePercentage : 42}" /></span>
-            <small>days left</small>
-          </div>
-          <strong class="text-sm text-primary">
-            <c:out value="${election != null ? election.startDateFull : 'Polling Date Pending'}" />
-          </strong>
-          <small class="text-xs text-on-surface-variant mt-1">
-            <c:out value="${election != null ? election.name : 'Phase window unavailable'}" />
-          </small>
-        </article>
-      </div>
-
-      <div class="stats-grid">
-        <article class="panel stat-card">
-          <div class="stat-meta">
-            <span class="stat-dot dot-blue">V</span>
-            <small class="text-xs text-green-600 font-semibold">+2.4%</small>
-          </div>
-          <div class="stat-label">Total Votes Received</div>
-          <div class="stat-value"><c:out value="${totalVotes}" /></div>
-          <div class="stat-sub">Current counted ballots</div>
-        </article>
-
-        <article class="panel stat-card">
-          <div class="stat-meta">
-            <span class="stat-dot dot-amber">R</span>
-            <small class="text-xs text-on-surface-variant font-semibold">Ranked</small>
-          </div>
-          <div class="stat-label">Predicted Reach Index</div>
-          <div class="stat-value"><c:out value="${votePercentage}" />%</div>
-          <div class="stat-sub">Projected influence score</div>
-        </article>
-
-        <article class="panel stat-card">
-          <div class="stat-meta">
-            <span class="stat-dot dot-purple">C</span>
-            <small class="text-xs text-green-600 font-semibold">Active</small>
-          </div>
-          <div class="stat-label">Competing Candidates</div>
-          <div class="stat-value"><c:out value="${fn:length(competingCandidates)}" /></div>
-          <div class="stat-sub">In your constituency</div>
-        </article>
-
-        <article class="panel stat-card">
-          <div class="stat-meta">
-            <span class="stat-dot dot-green">S</span>
-            <small class="text-xs text-on-surface-variant font-semibold">Details</small>
-          </div>
-          <div class="stat-label">Candidate Status</div>
-          <div class="stat-value" style="font-size:1.1rem;">
-            <c:out value="${candidate != null ? candidate.status : 'PENDING'}" />
-          </div>
-          <div class="stat-sub"><c:out value="${candidate != null ? candidate.partyName : 'Party pending'}" /></div>
-        </article>
-      </div>
-
-      <div class="bottom-row">
-        <article class="panel section-card">
-          <div class="section-head">
-            <h3>Election Milestones</h3>
-            <a href="${pageContext.request.contextPath}/candidate/application">View Timeline</a>
-          </div>
-
-          <div class="timeline">
-            <div class="timeline-item">
-              <span class="timeline-badge">1</span>
-              <div>
-                <h4>Application Submitted</h4>
-                <p>
-                  Nomination request submitted for
-                  <strong><c:out value="${election != null ? election.name : 'election selection'}" /></strong>
-                  in <c:out value="${constituency != null ? constituency.name : 'your constituency'}" />.
-                </p>
-              </div>
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <div class="search-container">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" placeholder="Search analytics, voters, or news...">
             </div>
 
-            <div class="timeline-item">
-              <span class="timeline-badge">2</span>
-              <div>
-                <h4>Verification & Screening</h4>
-                <p>
-                  Current stage:
-                  <strong><c:out value="${application != null ? application.status : 'PENDING'}" /></strong>.
-                  Admin review includes profile checks and compliance validation.
-                </p>
-              </div>
-            </div>
+            <div class="top-bar-right">
+                <button class="icon-btn" title="Notifications">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                </button>
+                <button class="icon-btn" title="Settings">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                </button>
 
-            <div class="timeline-item">
-              <span class="timeline-badge">3</span>
-              <div>
-                <h4>Campaign Activation</h4>
-                <p>
-                  Once approved, publish manifesto updates and coordinate outreach before
-                  <c:out value="${election != null ? election.startDateFormatted : 'polling day'}" />.
-                </p>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="panel section-card" id="competitors">
-          <div class="section-head">
-            <h3>Constituency Hotspots</h3>
-            <a href="${pageContext.request.contextPath}/candidate/manifesto">Create Campaign Post</a>
-          </div>
-
-          <div class="heat-map">
-            <div class="map-shape"></div>
-            <span class="pin blue"></span>
-            <span class="pin green"></span>
-            <span class="pin amber"></span>
-          </div>
-
-          <div class="competitor-list">
-            <c:choose>
-              <c:when test="${not empty competingCandidates}">
-                <c:forEach var="rival" items="${competingCandidates}">
-                  <div class="competitor-item">
-                    <div>
-                      <strong><c:out value="${rival.user.fullName}" /></strong>
-                      <div class="text-xs text-on-surface-variant"><c:out value="${rival.partyName}" /></div>
+                <div class="user-profile">
+                    <div class="user-info">
+                        <h4><c:out value="${sessionScope.user.fullName}" /></h4>
+                        <p>Candidate ID: #<c:out value="${sessionScope.user.id != null ? sessionScope.user.id : 'R9321'}" /></p>
                     </div>
-                    <div class="text-right">
-                      <strong><c:out value="${rival.totalVotes != null ? rival.totalVotes : 0}" /></strong>
-                      <div class="text-xs text-on-surface-variant">votes</div>
+                    <div class="user-avatar">
+                        <img src="https://ui-avatars.com/api/?name=${fn:replace(sessionScope.user.fullName, ' ', '+')}&background=0f172a&color=fff" alt="Avatar" style="width:100%; height:100%; object-fit:cover;">
                     </div>
-                  </div>
-                </c:forEach>
-              </c:when>
-              <c:otherwise>
-                <div class="competitor-item">
-                  <div>
-                    <strong>No competitors loaded</strong>
-                    <div class="text-xs text-on-surface-variant">Contest data will appear once candidate list is published.</div>
-                  </div>
                 </div>
-              </c:otherwise>
-            </c:choose>
-          </div>
-        </article>
-      </div>
-    </section>
-    <%-- ===== DASHBOARD CONTENT AREA: END ===== --%>
-  </div>
-</main>
+            </div>
+        </header>
+
+        <!-- Alerts -->
+        <c:if test="${not empty sessionScope.error}">
+            <div class="alert alert-error">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <c:out value="${sessionScope.error}" />
+            </div>
+            <% request.getSession().removeAttribute("error"); %>
+        </c:if>
+        <c:if test="${not empty sessionScope.success}">
+            <div class="alert alert-success">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <c:out value="${sessionScope.success}" />
+            </div>
+            <% request.getSession().removeAttribute("success"); %>
+        </c:if>
+
+        <div class="dash-row-top">
+            <!-- Hero Section -->
+            <article class="hero-card">
+                <div class="status-chips">
+                    <span class="chip light">Application Status</span>
+                    <span class="chip warning"><c:out value="${application != null ? application.status : 'VERIFICATION PENDING'}" /></span>
+                </div>
+                <h1 class="hero-title">
+                    Your nomination for the <c:out value="${constituency != null ? constituency.name : 'South Delhi'}" /> Constituency.
+                </h1>
+                <div class="hero-actions">
+                    <a href="${pageContext.request.contextPath}/candidate/application" class="btn btn-white">Review Application</a>
+                    <a href="#" class="btn btn-outline">Support Helpdesk</a>
+                </div>
+                <div class="hero-submission">
+                    <label>Submission Date</label>
+                    <span><c:out value="${application != null ? application.appliedAtFormatted : '14 OCT, 2023'}" /></span>
+                </div>
+            </article>
+
+            <!-- Election Countdown -->
+            <article class="countdown-card">
+                <h3>Election Countdown</h3>
+                <div class="progress-circle">
+                    <div class="progress-content">
+                        <span><c:out value="${votePercentage > 0 ? votePercentage : 42}" /></span>
+                        <label>Days Left</label>
+                    </div>
+                </div>
+                <div class="election-date"><c:out value="${election != null ? election.startDateFull : 'May 15, 2024'}" /></div>
+                <div class="election-phase"><c:out value="${election != null ? election.name : 'Phase 3 Voting Window'}" /></div>
+            </article>
+        </div>
+
+        <!-- Statistics Row -->
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon blue">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    </div>
+                    <span class="stat-trend trend-up">+2.4%</span>
+                </div>
+                <div class="stat-body">
+                    <label>Total Registered Voters</label>
+                    <h2>1,248,302</h2>
+                </div>
+                <div class="stat-footer">Current counted ballots</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon orange">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    </div>
+                    <span class="stat-trend trend-neutral">Ranked 3rd</span>
+                </div>
+                <div class="stat-body">
+                    <label>Predicted Reach Index</label>
+                    <h2><c:out value="${votePercentage > 0 ? votePercentage : 84.2}" />%</h2>
+                </div>
+                <div class="stat-footer">Projected influence score</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon purple">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    </div>
+                    <span class="stat-trend trend-up">All Active</span>
+                </div>
+                <div class="stat-body">
+                    <label>Active Polling Stations</label>
+                    <h2>1,402</h2>
+                </div>
+                <div class="stat-footer">In your constituency</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon green">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    </div>
+                    <a href="#" style="text-decoration:none; font-size:0.75rem; color:var(--primary); font-weight:800;">Details</a>
+                </div>
+                <div class="stat-body">
+                    <label>Fund Utilization</label>
+                    <h2>₹4.2M</h2>
+                </div>
+                <div class="stat-footer"><c:out value="${candidate != null ? candidate.partyName : 'National Peoples Party'}" /></div>
+            </div>
+        </div>
+
+        <div class="dash-row-bottom">
+            <!-- Election Milestones -->
+            <section class="section-card">
+                <div class="section-header">
+                    <h3>Election Milestones</h3>
+                    <a href="#">View Timeline</a>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker">
+                            <div class="marker-dot completed">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Document Upload Completed</h4>
+                            <p>Identity proof, educational certificates, and residential proof have been successfully verified by the portal's OCR system.</p>
+                        </div>
+                        <div class="timeline-date">Oct 12, 11:40 AM</div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker">
+                            <div class="marker-dot active">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            </div>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Physical Verification Scheduled</h4>
+                            <p>In-person meeting with the Returning Officer (RO) at the Zonal Election Office for oath taking and original document inspection.</p>
+                        </div>
+                        <div class="timeline-date">Oct 20, 09:00 AM</div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker">
+                            <div class="marker-dot pending"></div>
+                        </div>
+                        <div class="timeline-content">
+                            <h4>Final Candidate List Publication</h4>
+                            <p>Subject to successful clearance of all prior verification stages and absence of valid objections.</p>
+                        </div>
+                        <div class="timeline-date">Oct 28, 2023</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Constituency Hotspots -->
+            <section class="section-card">
+                <div class="section-header">
+                    <h3>Constituency Hotspots</h3>
+                </div>
+                <div class="map-container">
+                    <div class="map-dot blue"></div>
+                    <div class="map-dot orange"></div>
+                    <div class="map-dot gray"></div>
+                </div>
+                <div class="map-action">
+                    <button class="btn-create-post">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        Create Campaign Post
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
 
 </body>
 </html>

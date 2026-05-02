@@ -42,6 +42,15 @@ public class CandidateApplication implements Serializable {
     @Column(length = 100)
     private String symbol;
 
+    @Column(name = "id_proof_path", length = 500)
+    private String idProofPath;
+
+    @Column(name = "declaration_path", length = 500)
+    private String declarationPath;
+
+    @Column(name = "party_evidence_path", length = 500)
+    private String partyEvidencePath;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private ApplicationStatus status = ApplicationStatus.PENDING;
@@ -151,6 +160,30 @@ public class CandidateApplication implements Serializable {
 
     public void setStatus(ApplicationStatus status) {
         this.status = status;
+    }
+
+    public String getIdProofPath() {
+        return idProofPath;
+    }
+
+    public void setIdProofPath(String idProofPath) {
+        this.idProofPath = idProofPath;
+    }
+
+    public String getDeclarationPath() {
+        return declarationPath;
+    }
+
+    public void setDeclarationPath(String declarationPath) {
+        this.declarationPath = declarationPath;
+    }
+
+    public String getPartyEvidencePath() {
+        return partyEvidencePath;
+    }
+
+    public void setPartyEvidencePath(String partyEvidencePath) {
+        this.partyEvidencePath = partyEvidencePath;
     }
 
     public LocalDateTime getAppliedAt() {

@@ -1,44 +1,167 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<div class="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 transform bg-[#1a2a5c] lg:translate-x-0 lg:static lg:inset-0">
-    <div class="flex items-center justify-center mt-8">
-        <div class="flex items-center">
-            <svg class="w-8 h-8 text-white" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-            </svg>
-            <span class="mx-2 text-2xl font-bold text-white tracking-wide">Candidate Portal</span>
-        </div>
-    </div>
+  <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+    <style>
+      /* Premium Sidebar Styling */
+      .sidebar {
+        width: 260px;
+        background-color: #1e1b4b;
+        /* Dark Navy from mockup */
+        color: white;
+        display: flex;
+        flex-direction: column;
+        padding: 2.5rem 1.5rem;
+        position: fixed;
+        height: 100vh;
+        left: 0;
+        top: 0;
+        z-index: 100;
+      }
 
-    <nav class="mt-10 mb-6">
-        <a class="flex items-center px-6 py-2 mt-4 text-gray-100 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100" href="${pageContext.request.contextPath}/candidate/dashboard">
-            <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-            </svg>
-            <span class="mx-3">Dashboard</span>
+      .sidebar-brand {
+        margin-bottom: 3rem;
+      }
+
+      .sidebar-brand h2 {
+        font-size: 1.35rem;
+        font-weight: 800;
+        color: #dbeafe;
+        /* Light blue text for brand */
+        letter-spacing: -0.01em;
+      }
+
+      .sidebar-brand p {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #94a3b8;
+        margin-top: 0.35rem;
+        font-weight: 700;
+      }
+
+      .nav-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        flex: 1;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.85rem 1rem;
+        border-radius: 0.75rem;
+        text-decoration: none;
+        color: #94a3b8;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .nav-item:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: white;
+      }
+
+      .nav-item.active {
+        background-color: #dbeafe;
+        /* Lighter active state background to match image contrast */
+        color: #1e1b4b;
+      }
+
+      .nav-item svg {
+        width: 1.15rem;
+        height: 1.15rem;
+      }
+
+      .sidebar-footer {
+        margin-top: auto;
+        padding-top: 2rem;
+      }
+
+      .btn-declaration {
+        width: 100%;
+        background-color: #1e293b;
+        color: white;
+        padding: 0.9rem;
+        border-radius: 0.6rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: center;
+        display: block;
+        text-decoration: none;
+      }
+
+      .btn-declaration:hover {
+        background-color: #334155;
+        transform: translateY(-1px);
+      }
+    </style>
+
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <h2>Candidate Portal</h2>
+        <p>GENERAL ELECTION 2024</p>
+      </div>
+
+      <nav class="nav-list">
+        <a href="${pageContext.request.contextPath}/candidate/dashboard"
+          class="nav-item ${activeCandidateNav == 'dashboard' ? 'active' : ''}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          Dashboard
         </a>
-        <a class="flex items-center px-6 py-2 mt-4 text-gray-400 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100" href="${pageContext.request.contextPath}/candidate/profile">
-            <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-            </svg>
-            <span class="mx-3">My Profile</span>
+        <a href="${pageContext.request.contextPath}/candidate/application"
+          class="nav-item ${activeCandidateNav == 'application' ? 'active' : ''}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          Application
         </a>
-        <a class="flex items-center px-6 py-2 mt-4 text-gray-400 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100" href="${pageContext.request.contextPath}/candidate/application">
-            <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
-            </svg>
-            <span class="mx-3">My Application</span>
+        <a href="${pageContext.request.contextPath}/candidate/profile"
+          class="nav-item ${activeCandidateNav == 'profile' ? 'active' : ''}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          My Profile
         </a>
-        <a class="flex items-center px-6 py-2 mt-4 text-gray-400 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100" href="${pageContext.request.contextPath}/candidate/manifesto">
-            <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
-            </svg>
-            <span class="mx-3">Manifesto</span>
+        <a href="${pageContext.request.contextPath}/candidate/competing"
+          class="nav-item ${activeCandidateNav == 'competing' ? 'active' : ''}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M7 21v-2a4 4 0 0 1 3-3.87"></path>
+            <path d="M9 3.51a3.5 3.5 0 0 1 6 0"></path>
+            <rect x="4" y="9" width="16" height="11" rx="2"></rect>
+          </svg>
+          Competitors
         </a>
-        <a class="flex items-center px-6 py-2 mt-4 text-gray-400 hover:bg-gray-700 hover:bg-opacity-25 hover:text-gray-100" href="${pageContext.request.contextPath}/candidate/competing">
-            <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3.005 3.005 0 013.75-2.906z" />
-            </svg>
-            <span class="mx-3">Competing Candidates</span>
+        <a href="${pageContext.request.contextPath}/voter/cast-vote" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          Vote Now
         </a>
-    </nav>
-</div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="${pageContext.request.contextPath}/candidate/application" class="btn-declaration">Submit Declaration</a>
+      </div>
+    </aside>
