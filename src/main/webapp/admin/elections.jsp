@@ -1,383 +1,154 @@
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elections Gallery - NirvachanSetu</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        primary: '#1e3a8a',
-                        brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            900: '#0f2042',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    </style>
-</head>
-<body class="bg-[#f8fafc] text-gray-800 font-sans antialiased overflow-hidden">
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<c:set var="activePage" value="elections" scope="request" />
+<%@ include file="/layout/admin-layout.jsp" %>
 
-<div class="flex h-screen w-full">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col flex-shrink-0">
-        <div class="h-16 flex items-center px-6 border-b border-gray-100">
-            <div class="w-8 h-8 bg-brand-900 rounded flex items-center justify-center mr-3 text-white">
-                <i class="fa-solid fa-building-columns text-sm"></i>
-            </div>
-            <div>
-                <h1 class="text-brand-900 font-bold text-lg leading-tight">NirvachanSetu</h1>
-                <p class="text-[9px] text-gray-500 font-bold tracking-wider uppercase">Election Management</p>
-            </div>
+<div class="flex items-center justify-between mb-8">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-900">Election Management</h1>
+        <p class="text-gray-500 mt-1">Configure, schedule, and monitor nationwide and local elections.</p>
+    </div>
+    <a href="${pageContext.request.contextPath}/admin/elections" 
+       class="flex items-center gap-2 px-5 py-2.5 bg-blue-900 text-white rounded-lg font-medium hover:bg-blue-800 transition-all shadow-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        Refresh List
+    </a>
+</div>
+
+<c:if test="${not empty error}">
+    <div class="mb-6 rounded-lg bg-red-50 border border-red-200 text-red-700 px-4 py-3 flex items-center gap-3">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+        ${error}
+    </div>
+</c:if>
+
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-10 hover:shadow-md transition-shadow">
+    <div class="flex items-center gap-3 mb-6">
+        <div class="p-2 bg-blue-50 text-blue-600 rounded-lg">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h2 class="text-xl font-bold text-gray-800">${isEdit ? 'Update Existing Election' : 'Create New Election'}</h2>
+    </div>
+    
+    <form method="post" action="${pageContext.request.contextPath}/admin/elections" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <input type="hidden" name="electionId" value="${isEdit ? election.id : ''}">
+        
+        <div class="space-y-1">
+            <label class="text-xs font-bold text-gray-500 uppercase ml-1">Election Name</label>
+            <input name="name" value="${isEdit ? election.name : ''}" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="e.g. General Election 2025" required>
         </div>
 
-        <nav class="flex-1 py-6 px-4 space-y-1.5 overflow-y-auto">
-            <a href="dashboard.jsp" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-                <i class="fa-solid fa-border-all w-5 h-5 mr-3 text-gray-400 group-hover:text-gray-600"></i>
-                Dashboard
-            </a>
-            <a href="users.jsp" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-                <i class="fa-solid fa-users w-5 h-5 mr-3 text-gray-400"></i>
-                Users
-            </a>
-            <a href="candidates.jsp" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-                <i class="fa-solid fa-user-tie w-5 h-5 mr-3 text-gray-400"></i>
-                Candidates
-            </a>
-            <!-- Active Menu Item: Elections -->
-            <a href="elections.jsp" class="flex items-center px-4 py-2.5 text-sm font-semibold rounded-lg bg-blue-50 text-blue-700">
-                <i class="fa-solid fa-check-to-slot w-5 h-5 mr-3 text-blue-700"></i>
-                Elections
-            </a>
-            <a href="constituencies.jsp" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-                <i class="fa-solid fa-map-location-dot w-5 h-5 mr-3 text-gray-400"></i>
-                Constituencies
-            </a>
-            <a href="results.jsp" class="flex items-center px-4 py-2.5 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
-                <i class="fa-solid fa-chart-simple w-5 h-5 mr-3 text-gray-400"></i>
-                Results
-            </a>
-        </nav>
-
-        <div class="p-4 border-t border-gray-100 space-y-1">
-            <a href="#" class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg transition-colors">
-                <i class="fa-regular fa-circle-question w-5 h-5 mr-3 text-gray-400"></i>
-                Support
-            </a>
-            <a href="#" class="flex items-center px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                <i class="fa-solid fa-arrow-right-from-bracket w-5 h-5 mr-3 text-red-500"></i>
-                Logout
-            </a>
+        <div class="space-y-1">
+            <label class="text-xs font-bold text-gray-500 uppercase ml-1">Election Type</label>
+            <select name="electionType" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all appearance-none bg-no-repeat bg-[right_1rem_center] bg-[length:1em_1em]" style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22/%3E%3C/svg%3E');" required>
+                <option value="">Select Type</option>
+                <option value="HOR" ${isEdit && election.electionType.name() == 'HOR' ? 'selected' : ''}>HOR</option>
+                <option value="PROVINCIAL" ${isEdit && election.electionType.name() == 'PROVINCIAL' ? 'selected' : ''}>PROVINCIAL</option>
+                <option value="LOCAL" ${isEdit && election.electionType.name() == 'LOCAL' ? 'selected' : ''}>LOCAL</option>
+            </select>
         </div>
-    </aside>
 
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col overflow-hidden relative">
-        <header class="h-16 bg-white flex items-center justify-between px-8 z-10 flex-shrink-0">
-            <div class="flex-1 flex">
-                <div class="relative w-full max-w-md">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <i class="fa-solid fa-magnifying-glass text-gray-400 text-sm"></i>
-                    </div>
-                    <input type="text" class="block w-full pl-10 pr-3 py-2.5 border-none rounded-xl text-sm bg-gray-100 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all" placeholder="Search elections, phases, or IDs...">
-                </div>
-            </div>
+        <div class="space-y-1">
+            <label class="text-xs font-bold text-gray-500 uppercase ml-1">Status</label>
+            <select name="status" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all appearance-none bg-no-repeat bg-[right_1rem_center] bg-[length:1em_1em]" style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22/%3E%3C/svg%3E');">
+                <option value="DRAFT" ${isEdit && election.status == 'DRAFT' ? 'selected' : ''}>DRAFT</option>
+                <option value="REGISTRATION" ${isEdit && election.status == 'REGISTRATION' ? 'selected' : ''}>REGISTRATION</option>
+                <option value="ACTIVE" ${isEdit && election.status == 'ACTIVE' ? 'selected' : ''}>ACTIVE</option>
+                <option value="COMPLETED" ${isEdit && election.status == 'COMPLETED' ? 'selected' : ''}>COMPLETED</option>
+                <option value="CANCELLED" ${isEdit && election.status == 'CANCELLED' ? 'selected' : ''}>CANCELLED</option>
+            </select>
+        </div>
 
-            <div class="flex items-center space-x-6">
-                <button class="text-gray-400 hover:text-gray-600 relative transition-colors">
-                    <i class="fa-solid fa-bell text-[1.1rem]"></i>
-                    <span class="absolute -top-0.5 -right-0.5 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
-                </button>
-                <button class="text-gray-400 hover:text-gray-600 transition-colors">
-                    <i class="fa-solid fa-gear text-[1.1rem]"></i>
-                </button>
+        <div class="space-y-1">
+            <label class="text-xs font-bold text-gray-500 uppercase ml-1">Start Date & Time</label>
+            <input type="datetime-local" name="startDate" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" required>
+        </div>
 
-                <div class="h-8 w-px bg-gray-200"></div>
+        <div class="space-y-1">
+            <label class="text-xs font-bold text-gray-500 uppercase ml-1">End Date & Time</label>
+            <input type="datetime-local" name="endDate" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" required>
+        </div>
 
-                <div class="flex items-center cursor-pointer">
-                    <div class="mr-3 text-right">
-                        <div class="text-sm font-bold text-brand-900 leading-tight">Admin Console</div>
-                        <div class="text-xs text-gray-500 mt-0.5">ECI Super Admin</div>
-                    </div>
-                    <img class="h-9 w-9 rounded-full object-cover border border-gray-200" src="https://i.pravatar.cc/150?img=11" alt="Admin Avatar">
-                </div>
-            </div>
-        </header>
+        <div class="space-y-1">
+            <label class="text-xs font-bold text-gray-500 uppercase ml-1">Specific Constituency</label>
+            <select name="constituencyId" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all appearance-none bg-no-repeat bg-[right_1rem_center] bg-[length:1em_1em]" style="background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22/%3E%3C/svg%3E');">
+                <option value="">All Constituencies (National)</option>
+                <c:forEach var="cst" items="${constituencies}">
+                    <option value="${cst.id}" ${isEdit && election.constituency != null && election.constituency.id == cst.id ? 'selected' : ''}>${cst.name}</option>
+                </c:forEach>
+            </select>
+        </div>
 
-        <main class="flex-1 overflow-y-auto p-8">
-            <div class="max-w-7xl mx-auto space-y-6 pb-8">
+        <div class="md:col-span-2 lg:col-span-3 space-y-1">
+            <label class="text-xs font-bold text-gray-500 uppercase ml-1">Election Description</label>
+            <textarea name="description" class="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all h-24 resize-none" placeholder="Provide details about the election objectives, rules, and scope...">${isEdit ? election.description : ''}</textarea>
+        </div>
 
-                <!-- Page Header -->
-                <div class="flex justify-between items-end">
-                    <div>
-                        <h2 class="text-2xl font-bold text-brand-900 tracking-tight">Elections Gallery</h2>
-                        <p class="text-sm text-gray-500 mt-1">Manage and monitor national and regional electoral cycles.</p>
-                    </div>
-                    <button class="px-5 py-2.5 bg-brand-900 hover:bg-[#0a152e] text-white text-sm font-semibold rounded-lg transition-colors shadow-sm flex items-center">
-                        <i class="fa-solid fa-plus mr-2 text-white/80"></i> Create New Election
-                    </button>
-                </div>
+        <div class="md:col-span-2 lg:col-span-3 pt-2">
+            <button class="w-full md:w-auto px-10 py-3 bg-blue-900 text-white rounded-lg font-bold hover:bg-blue-800 transition-all shadow-md active:scale-[0.98]">
+                ${isEdit ? 'Update Election Configuration' : 'Launch New Election'}
+            </button>
+        </div>
+    </form>
+</div>
 
-                <!-- Top Cards -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Ongoing Phase Card -->
-                    <div class="lg:col-span-2 bg-white rounded-2xl p-8 shadow-sm border border-gray-100 relative overflow-hidden flex items-center">
-                        <div class="flex-1">
-                            <div class="text-[10px] font-bold text-blue-500 uppercase tracking-wider mb-2">ONGOING PHASE</div>
-                            <h3 class="text-2xl font-bold text-brand-900 mb-6">General Elections 2024: Phase 4</h3>
-
-                            <div class="flex space-x-12">
-                                <div>
-                                    <div class="text-3xl font-bold text-brand-900">128M</div>
-                                    <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-1">REGISTERED VOTERS</div>
-                                </div>
-                                <div>
-                                    <div class="text-3xl font-bold text-brand-900">96k</div>
-                                    <div class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mt-1">POLLING BOOTHS</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Background Circle & Icon -->
-                        <div class="absolute right-0 top-0 bottom-0 w-64 bg-blue-50/50 rounded-l-full flex items-center justify-center translate-x-10">
-                            <div class="w-20 h-20 bg-white rounded-2xl shadow-sm border border-blue-100 flex items-center justify-center text-brand-600">
-                                <i class="fa-solid fa-chart-simple text-3xl"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Quick Stats Card -->
-                    <div class="bg-brand-900 rounded-2xl p-8 shadow-md text-white relative overflow-hidden flex flex-col justify-center">
-                        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white opacity-5 rounded-full"></div>
-                        <div class="text-[10px] font-bold text-blue-200 uppercase tracking-wider mb-6 relative z-10">QUICK STATS</div>
-
-                        <div class="space-y-4 relative z-10">
-                            <div class="flex justify-between items-center border-b border-blue-800/50 pb-4">
-                                <span class="text-sm text-blue-100 font-medium">Active Elections</span>
-                                <span class="text-2xl font-bold text-white">04</span>
-                            </div>
-                            <div class="flex justify-between items-center border-b border-blue-800/50 pb-4">
-                                <span class="text-sm text-blue-100 font-medium">Scheduled</span>
-                                <span class="text-2xl font-bold text-white">12</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-blue-100 font-medium">Completed YTD</span>
-                                <span class="text-2xl font-bold text-white">08</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Election Schedules Table -->
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div class="p-6 border-b border-gray-100 flex justify-between items-center">
-                        <h3 class="text-base font-bold text-brand-900">Election Schedules</h3>
-                        <div class="flex space-x-2">
-                            <button class="w-9 h-9 flex items-center justify-center border border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
-                                <i class="fa-solid fa-filter text-sm"></i>
-                            </button>
-                            <button class="w-9 h-9 flex items-center justify-center border border-gray-200 text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
-                                <i class="fa-solid fa-download text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                            <tr class="bg-white border-b border-gray-100">
-                                <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">TITLE</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">START DATE</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">END DATE</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider">STATUS</th>
-                                <th class="px-6 py-4 text-[10px] font-bold text-gray-400 uppercase tracking-wider text-right">ACTIONS</th>
-                            </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-50">
-                            <!-- Row 1 -->
-                            <tr class="hover:bg-gray-50/50 transition-colors">
-                                <td class="px-6 py-5">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mr-4 shadow-sm border border-blue-100">
-                                            <i class="fa-solid fa-earth-americas text-sm"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-bold text-brand-900 leading-tight">General Assembly Elections<br>2024</div>
-                                            <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">ID: ECI-GE-2024-ND</div>
-                                        </div>
-                                    </div>
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
+        <h2 class="font-bold text-gray-800">All Registered Elections</h2>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Election Name</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Scope</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Schedule</th>
+                    <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
+                    <th class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <c:choose>
+                    <c:when test="${empty elections}">
+                        <tr><td colspan="5" class="px-6 py-12 text-center text-gray-500">No elections found in the database.</td></tr>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach var="el" items="${elections}">
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-semibold text-gray-900">${el.name}</div>
+                                    <div class="text-xs text-gray-500">${el.electionType}</div>
                                 </td>
-                                <td class="px-6 py-5 text-sm text-gray-600 font-medium">April 19,<br>2024</td>
-                                <td class="px-6 py-5 text-sm text-gray-600 font-medium">June 01,<br>2024</td>
-                                <td class="px-6 py-5">
-                                        <span class="inline-flex items-center px-2.5 py-1 text-[10px] font-bold text-blue-700 bg-blue-100 rounded uppercase tracking-wider">
-                                            Ongoing
-                                        </span>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                                    ${el.constituency != null ? el.constituency.name : '<span class="text-gray-400">National</span>'}
                                 </td>
-                                <td class="px-6 py-5 text-right">
-                                    <button class="w-8 h-8 text-gray-400 hover:text-gray-600 rounded-full transition-colors inline-flex items-center justify-center">
-                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                    </button>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <div><span class="font-medium text-gray-700">Starts:</span> ${el.startDate}</div>
+                                    <div><span class="font-medium text-gray-700">Ends:</span> ${el.endDate}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2.5 py-1 rounded-full text-xs font-bold
+                                        ${el.status == 'ACTIVE' ? 'bg-emerald-100 text-emerald-700' : 
+                                          el.status == 'REGISTRATION' ? 'bg-blue-100 text-blue-700' : 
+                                          el.status == 'COMPLETED' ? 'bg-gray-100 text-gray-700' : 
+                                          'bg-amber-100 text-amber-700'}">
+                                        ${el.status}
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <a class="flex items-center justify-end gap-1 text-blue-600 hover:text-blue-900 font-bold" href="${pageContext.request.contextPath}/admin/elections?id=${el.id}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        Edit
+                                    </a>
                                 </td>
                             </tr>
-
-                            <!-- Row 2 -->
-                            <tr class="hover:bg-gray-50/50 transition-colors">
-                                <td class="px-6 py-5">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center mr-4 shadow-sm border border-orange-100">
-                                            <i class="fa-solid fa-building-columns text-sm"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-bold text-brand-900 leading-tight">State Legislature:<br>Maharashtra</div>
-                                            <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">ID: ECI-SL-2024-MH</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-5 text-sm text-gray-600 font-medium">Oct 15, 2024</td>
-                                <td class="px-6 py-5 text-sm text-gray-600 font-medium">Nov 20,<br>2024</td>
-                                <td class="px-6 py-5">
-                                        <span class="inline-flex items-center px-2.5 py-1 text-[10px] font-bold text-orange-700 bg-orange-100 rounded uppercase tracking-wider">
-                                            Upcoming
-                                        </span>
-                                </td>
-                                <td class="px-6 py-5 text-right">
-                                    <button class="w-8 h-8 text-gray-400 hover:text-gray-600 rounded-full transition-colors inline-flex items-center justify-center">
-                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                    </button>
-                                </td>
-                            </tr>
-
-                            <!-- Row 3 -->
-                            <tr class="hover:bg-gray-50/50 transition-colors">
-                                <td class="px-6 py-5">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-full bg-green-50 text-green-600 flex items-center justify-center mr-4 shadow-sm border border-green-100">
-                                            <i class="fa-solid fa-building text-sm"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-bold text-brand-900 leading-tight">Municipal Corporation:<br>Bangalore</div>
-                                            <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">ID: ECI-MC-2023-KA</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-5 text-sm text-gray-600 font-medium">Dec 10,<br>2023</td>
-                                <td class="px-6 py-5 text-sm text-gray-600 font-medium">Dec 28,<br>2023</td>
-                                <td class="px-6 py-5">
-                                        <span class="inline-flex items-center px-2.5 py-1 text-[10px] font-bold text-green-700 bg-green-100 rounded uppercase tracking-wider">
-                                            Completed
-                                        </span>
-                                </td>
-                                <td class="px-6 py-5 text-right">
-                                    <button class="w-8 h-8 text-gray-400 hover:text-gray-600 rounded-full transition-colors inline-flex items-center justify-center">
-                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                    </button>
-                                </td>
-                            </tr>
-
-                            <!-- Row 4 -->
-                            <tr class="hover:bg-gray-50/50 transition-colors">
-                                <td class="px-6 py-5">
-                                    <div class="flex items-center">
-                                        <div class="w-10 h-10 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center mr-4 shadow-sm border border-orange-100">
-                                            <i class="fa-solid fa-building-columns text-sm"></i>
-                                        </div>
-                                        <div>
-                                            <div class="text-sm font-bold text-brand-900 leading-tight">By-Elections: Kerala District 4</div>
-                                            <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">ID: ECI-BY-2024-KL</div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-5 text-sm text-gray-600 font-medium">Sept 05,<br>2024</td>
-                                <td class="px-6 py-5 text-sm text-gray-600 font-medium">Sept 08,<br>2024</td>
-                                <td class="px-6 py-5">
-                                        <span class="inline-flex items-center px-2.5 py-1 text-[10px] font-bold text-orange-700 bg-orange-100 rounded uppercase tracking-wider">
-                                            Upcoming
-                                        </span>
-                                </td>
-                                <td class="px-6 py-5 text-right">
-                                    <button class="w-8 h-8 text-gray-400 hover:text-gray-600 rounded-full transition-colors inline-flex items-center justify-center">
-                                        <i class="fa-solid fa-ellipsis-vertical"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="p-5 border-t border-gray-100 flex justify-between items-center bg-gray-50/30">
-                        <span class="text-xs font-medium text-gray-500">Showing <span class="font-bold text-gray-800">4</span> of <span class="font-bold text-gray-800">24</span> elections</span>
-                        <div class="flex space-x-2">
-                            <button class="px-4 py-2 border border-gray-200 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-50 transition-colors bg-white">
-                                Previous
-                            </button>
-                            <button class="px-4 py-2 border border-gray-200 text-gray-600 text-xs font-semibold rounded-lg hover:bg-gray-50 transition-colors bg-white">
-                                Next
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bottom Info Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-                    <!-- Smart Scheduling -->
-                    <div class="bg-blue-50/50 rounded-2xl p-6 border border-blue-100 flex items-start">
-                        <div class="w-10 h-10 rounded-xl bg-white text-blue-600 flex items-center justify-center shadow-sm mr-4 flex-shrink-0">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-bold text-brand-900 mb-1">Smart Scheduling</h4>
-                            <p class="text-[11px] text-gray-600 leading-relaxed">The system automatically avoids religious and public holidays for polling dates based on regional calendars.</p>
-                        </div>
-                    </div>
-
-                    <!-- Integrity Checks -->
-                    <div class="bg-orange-50/50 rounded-2xl p-6 border border-orange-100 flex items-start">
-                        <div class="w-10 h-10 rounded-xl bg-white text-orange-600 flex items-center justify-center shadow-sm mr-4 flex-shrink-0">
-                            <i class="fa-solid fa-shield-check"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-bold text-brand-900 mb-1">Integrity Checks</h4>
-                            <p class="text-[11px] text-gray-600 leading-relaxed">All election metadata is immutable once the notification is gazetted and pushed to blockchain nodes.</p>
-                        </div>
-                    </div>
-
-                    <!-- Resource Archive -->
-                    <div class="bg-indigo-50/50 rounded-2xl p-6 border border-indigo-100 flex items-start">
-                        <div class="w-10 h-10 rounded-xl bg-white text-indigo-600 flex items-center justify-center shadow-sm mr-4 flex-shrink-0">
-                            <i class="fa-solid fa-file-invoice"></i>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-bold text-brand-900 mb-1">Resource Archive</h4>
-                            <p class="text-[11px] text-gray-600 leading-relaxed">Past election data, including voter turnout and constituency maps, are available in the centralized archive.</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </main>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+            </tbody>
+        </table>
     </div>
 </div>
 
-</body>
-</html>
+<%@ include file="/layout/admin-layout-close.jsp" %>

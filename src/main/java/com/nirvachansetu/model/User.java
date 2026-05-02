@@ -43,6 +43,27 @@ public class User implements Serializable {
     @Column(columnDefinition = "TEXT")
     private String address;
 
+    @Column(name = "voter_id", length = 50)
+    private String voterId;
+
+    @Column(name = "dob", length = 20)
+    private String dob;
+
+    @Column(name = "gender", length = 20)
+    private String gender;
+
+    @Column(name = "relative_name", length = 100)
+    private String relativeName;
+
+    @Column(name = "epic_card_type", length = 50)
+    private String epicCardType;
+
+    @Column(name = "polling_station", length = 255)
+    private String pollingStation;
+
+    @Column(name = "verified_on", length = 50)
+    private String verifiedOn;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "constituency_id")
     private Constituency constituency;
@@ -163,6 +184,62 @@ public class User implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getVoterId() {
+        return voterId;
+    }
+
+    public void setVoterId(String voterId) {
+        this.voterId = voterId;
+    }
+
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getRelativeName() {
+        return relativeName;
+    }
+
+    public void setRelativeName(String relativeName) {
+        this.relativeName = relativeName;
+    }
+
+    public String getEpicCardType() {
+        return epicCardType;
+    }
+
+    public void setEpicCardType(String epicCardType) {
+        this.epicCardType = epicCardType;
+    }
+
+    public String getPollingStation() {
+        return pollingStation;
+    }
+
+    public void setPollingStation(String pollingStation) {
+        this.pollingStation = pollingStation;
+    }
+
+    public String getVerifiedOn() {
+        return verifiedOn;
+    }
+
+    public void setVerifiedOn(String verifiedOn) {
+        this.verifiedOn = verifiedOn;
     }
 
     public Constituency getConstituency() {

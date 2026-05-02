@@ -47,7 +47,7 @@ public class AuthFilter implements Filter {
         // =========================================================================
         // --- BYPASS AUTH LOGIC FOR UI TESTING (DUMMY LOGIN) ---
         // Explaination: If a user is not logged in through the conventional /login,
-        // this interceptor forcefully injects a simulated Voter into the session.
+        // this interceptor forcefully injects a simulated user into the session.
         // This ensures developers can test dashboard UI without DB dependencies.
         // =========================================================================
         if (session == null || session.getAttribute(com.nirvachansetu.util.AppConstants.SESSION_USER) == null) {
@@ -56,15 +56,33 @@ public class AuthFilter implements Filter {
             // Create a fake dummy user
             com.nirvachansetu.model.User dummyUser = new com.nirvachansetu.model.User();
             dummyUser.setId(-1);
-            dummyUser.setFullName("Vikrant Singh"); // The name seen on UI
-            dummyUser.setEmail("vikrant@test.com");
-            dummyUser.setRole(com.nirvachansetu.model.User.Role.VOTER);
+            dummyUser.setFullName("Arjun Srinivasan"); // The name seen on UI
+            dummyUser.setEmail("arjun@test.com");
+            dummyUser.setVoterId("ABC1234567");
+            dummyUser.setDob("14 May 1992");
+            dummyUser.setGender("Male");
+            dummyUser.setPhone("+91 98XXX XX042");
+            dummyUser.setAddress("Flat 402, Green Meadows Apts, 4th Main, HSR Layout Sector 2, Bangalore - 560102");
+            dummyUser.setRelativeName("Srinivasan Ramanujan (Father)");
+            dummyUser.setEpicCardType("Digital PVC e-EPIC");
+            dummyUser.setPollingStation("St. Mary's School, Block B, Room 4");
+            dummyUser.setVerifiedOn("12 Oct 2023");
+            
+            // Dynamically assign role based on the path being accessed
+            com.nirvachansetu.model.User.Role fakeRole = com.nirvachansetu.model.User.Role.VOTER;
+            if (path.startsWith("/admin")) {
+                fakeRole = com.nirvachansetu.model.User.Role.ADMIN;
+            } else if (path.startsWith("/candidate")) {
+                fakeRole = com.nirvachansetu.model.User.Role.CANDIDATE;
+            }
+            dummyUser.setRole(fakeRole);
+            
             dummyUser.setStatus(com.nirvachansetu.model.User.UserStatus.APPROVED);
             
             // Configure a fake constituency for the User
             com.nirvachansetu.model.Constituency dummyC = new com.nirvachansetu.model.Constituency();
             dummyC.setId(1);
-            dummyC.setName("Bangalore South");
+            dummyC.setName("Bangalore South (26)");
             dummyC.setTotalVoters(1250000);
             dummyUser.setConstituency(dummyC);
             

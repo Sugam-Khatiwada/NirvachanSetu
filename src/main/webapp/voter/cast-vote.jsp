@@ -8,317 +8,227 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cast Your Vote - NirvachanSetu</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/output.css">
-    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/images/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .candidate-card { transition: all 0.2s ease; border: 2px solid transparent; }
+        .candidate-card:hover { border-color: #e2e8f0; }
+        .candidate-card.selected { border-color: #1e3a8a; background-color: #f0fdf4; } /* or slightly tinted */
+        
+        .radio-custom {
+            appearance: none;
+            background-color: transparent;
+            margin: 0;
+            font: inherit;
+            color: currentColor;
+            width: 1.5em;
+            height: 1.5em;
+            border: 2px solid #cbd5e1;
+            border-radius: 50%;
+            display: grid;
+            place-content: center;
+            cursor: pointer;
+        }
+        .radio-custom::before {
+            content: "";
+            width: 0.75em;
+            height: 0.75em;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+            box-shadow: inset 1em 1em #1e3a8a;
+        }
+        .candidate-card.selected .radio-custom {
+            border-color: #1e3a8a;
+        }
+        .candidate-card.selected .radio-custom::before {
+            transform: scale(1);
+        }
+    </style>
 </head>
-<body class="bg-background font-inter text-on-surface">
+<body class="bg-gray-50 text-gray-800">
 
-    <!-- Sidebar Overlay (mobile) -->
-    <div id="sidebar-overlay" class="sidebar-overlay"></div>
-
-    <!-- Sidebar -->
-    <aside id="sidebar" class="sidebar">
-        <div class="p-6">
-            <div class="flex items-center gap-3 mb-8">
-                <div class="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                    </svg>
-                </div>
-                <div>
-                    <h1 class="font-manrope text-lg font-bold text-primary leading-tight">NirvachanSetu</h1>
-                    <p class="text-xs text-on-surface-variant">Election Portal</p>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-3 p-3 bg-surface-container-low rounded-xl mb-6">
-                <div class="avatar">
-                    ${fn:substring(user.fullName, 0, 1)}
-                </div>
-                <div class="flex-1 min-w-0">
-                    <p class="text-sm font-semibold text-on-surface truncate">${user.fullName}</p>
-                    <p class="text-xs text-on-surface-variant truncate">${user.email}</p>
-                </div>
-            </div>
-
-            <nav class="flex flex-col gap-1">
-                <a href="${pageContext.request.contextPath}/voter/dashboard" class="sidebar-link">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                    </svg>
-                    Dashboard
-                </a>
-                <a href="${pageContext.request.contextPath}/voter/candidates" class="sidebar-link">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                    Candidates
-                </a>
-                <a href="${pageContext.request.contextPath}/voter/cast-vote" class="sidebar-link-active">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                    </svg>
-                    Cast Vote
-                </a>
-                <a href="${pageContext.request.contextPath}/voter/results" class="sidebar-link">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                    </svg>
-                    Results
-                </a>
-                <div class="divider my-4"></div>
-                <a href="${pageContext.request.contextPath}/voter/profile" class="sidebar-link">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                    </svg>
-                    My Profile
-                </a>
-                <a href="${pageContext.request.contextPath}/logout" class="sidebar-link text-red-500">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                    </svg>
-                    Logout
-                </a>
-            </nav>
-        </div>
-    </aside>
+    <!-- Navigation Bar -->
+    <c:set var="activePage" value="vote" scope="request" />
+    <jsp:include page="../layout/header.jsp" />
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="max-w-3xl mx-auto px-6 py-12">
 
-        <!-- Navbar -->
-        <header class="navbar rounded-xl mb-6">
-            <div class="flex items-center gap-3">
-                <button id="sidebar-toggle" class="btn-icon lg:hidden">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                    </svg>
-                </button>
-                <div>
-                    <div class="flex items-center gap-2 text-sm text-on-surface-variant">
-                        <a href="${pageContext.request.contextPath}/voter/dashboard" class="hover:text-primary transition-colors">Dashboard</a>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                        <span class="text-on-surface font-medium">Cast Vote</span>
-                    </div>
-                    <h2 class="font-manrope text-xl font-bold text-on-surface flex items-center gap-2">
-                        <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
-                        Cast Your Vote
-                    </h2>
-                </div>
-            </div>
-            <div class="hidden md:flex items-center gap-2">
-                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                <span class="text-sm text-on-surface-variant">Secure Voting Active</span>
-            </div>
-        </header>
+        <!-- Header Titles -->
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-[#1e3a8a] mb-3">Cast Your Ballot</h1>
+            <p class="text-sm text-gray-600 font-medium">
+                ${not empty election.name ? election.name : 'General Election 2024'} &bull; 
+                Constituency: ${not empty user.constituency.name ? user.constituency.name : 'Central Metropolitan'} &bull; 
+                Voter ID: ${not empty user.voterId ? user.voterId : 'ND-9921-X'}
+            </p>
+        </div>
 
-        <!-- Privacy Alert -->
-        <div class="alert alert-info mb-6 animate-fade-in">
-            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-            </svg>
+        <!-- Warning Alert -->
+        <div class="bg-[#fee2e2] border-l-4 border-red-600 p-5 rounded-lg mb-8 flex gap-3 shadow-sm">
+            <i class="fas fa-exclamation-triangle text-red-600 mt-0.5"></i>
             <div>
-                <p class="font-semibold text-sm">Your Vote is Completely Anonymous</p>
-                <p class="text-sm opacity-80 mt-0.5">Your identity will <strong>NOT</strong> be linked to your vote. This system uses end-to-end encryption to ensure ballot secrecy as required by election law.</p>
+                <h3 class="font-bold text-red-800 mb-1">Important Notice</h3>
+                <p class="text-sm text-red-700">You can only vote once. Please review your selection carefully before submitting. This action is final and cannot be undone.</p>
             </div>
         </div>
 
-        <c:choose>
-            <c:when test="${alreadyVoted}">
-
-                <!-- Already Voted Success State -->
-                <div class="card text-center py-12 px-6 animate-fade-in-up max-w-lg mx-auto">
-                    <div class="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <h3 class="font-manrope text-2xl font-bold text-on-surface mb-3">Vote Successfully Cast</h3>
-                    <p class="text-on-surface-variant mb-6">
-                        You have already cast your vote in this election. Thank you for participating in democracy!
-                    </p>
-                    <div class="bg-surface-container-low rounded-xl p-4 mb-6">
-                        <div class="flex items-center justify-center gap-2 text-sm">
-                            <span class="dot-green"></span>
-                            <span class="font-medium text-on-surface">Your vote has been securely recorded</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                        <a href="${pageContext.request.contextPath}/voter/results" class="btn-primary justify-center">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                            </svg>
-                            View Results
-                        </a>
-                        <a href="${pageContext.request.contextPath}/voter/dashboard" class="btn-outline justify-center">
-                            Back to Dashboard
-                        </a>
-                    </div>
-                </div>
-
-            </c:when>
-            <c:otherwise>
-
-                <!-- Voting Form -->
-                <form id="vote-form" action="${pageContext.request.contextPath}/voter/cast-vote" method="post">
-                    <input type="hidden" name="electionId" value="${election.id}">
-
-                    <!-- Election Info Card -->
-                    <div class="card mb-6 animate-fade-in">
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-                            <div class="w-12 h-12 bg-primary-light rounded-xl flex items-center justify-center flex-shrink-0">
-                                <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                </svg>
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-manrope font-semibold text-on-surface">${election.name}</h4>
-                                <p class="text-sm text-on-surface-variant">
-                                    ${election.startDateFull}
-                                    &nbsp;&bull;&nbsp; ${user.constituency.name}, ${user.constituency.district}
-                                </p>
-                            </div>
-                            <span class="badge badge-green">Polling Open</span>
-                        </div>
-                    </div>
-
-                    <!-- Instructions -->
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="text-sm font-medium text-on-surface">Step 1:</span>
-                        <span class="text-sm text-on-surface-variant">Select a candidate from the list below</span>
-                    </div>
-
-                    <!-- Candidate Selection Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-
-                        <c:forEach var="candidate" items="${candidates}">
-                            <div class="radio-card card candidate-card cursor-pointer"
-                                 data-candidate-card
-                                 data-candidate-name="${candidate.user.fullName}"
-                                 data-candidate-display-name="${candidate.user.fullName}">
-
-                                <input type="radio" name="candidateId" value="${candidate.id}" id="candidate-${candidate.id}" required>
-
-                                <!-- Profile -->
-                                <div class="flex items-center gap-3 mb-3">
-                                    <div class="avatar avatar-lg flex-shrink-0">
+        <!-- Voting Form -->
+        <form id="voteForm" action="${pageContext.request.contextPath}/voter/cast-vote" method="post">
+            <input type="hidden" name="electionId" value="${election.id}">
+            <div class="flex flex-col gap-4 mb-8">
+                
+                <!-- Candidates -->
+                <c:choose>
+                    <c:when test="${not empty candidates}">
+                        <c:forEach var="candidate" items="${candidates}" varStatus="status">
+                            <label class="candidate-card bg-white p-5 rounded-xl shadow-sm flex items-center justify-between cursor-pointer">
+                                <div class="flex items-center gap-5">
+                                    <div class="w-14 h-14 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center border-2 border-gray-100">
                                         <c:choose>
                                             <c:when test="${not empty candidate.user.profileImage}">
-                                                <img src="${pageContext.request.contextPath}/images/profiles/${candidate.user.profileImage}" alt="${candidate.user.fullName}">
+                                                <img src="${candidate.user.profileImage}" alt="${candidate.user.fullName}" class="w-full h-full object-cover">
                                             </c:when>
                                             <c:otherwise>
-                                                ${fn:substring(candidate.user.fullName, 0, 1)}
+                                                <img src="https://ui-avatars.com/api/?name=${candidate.user.fullName}&background=random" alt="${candidate.user.fullName}" class="w-full h-full object-cover">
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
-                                    <div class="flex-1 min-w-0">
-                                        <h4 class="font-manrope font-semibold text-on-surface" data-candidate-display-name>${candidate.user.fullName}</h4>
-                                        <p class="text-sm text-on-surface-variant">${candidate.partyName}</p>
+                                    <div>
+                                        <h3 class="text-xl font-bold text-[#1e3a8a] mb-1">${candidate.user.fullName}</h3>
+                                        <p class="text-sm text-gray-600 mb-1">${candidate.partyName}</p>
+                                        <div class="flex items-center gap-1.5 text-xs font-bold text-blue-600 uppercase tracking-wide">
+                                            <i class="fas fa-check-circle"></i> Verified Candidate
+                                        </div>
                                     </div>
                                 </div>
-
-                                <!-- Party Badge & Symbol -->
-                                <div class="flex items-center gap-2 mb-2">
-                                    <c:choose>
-                                        <c:when test="${candidate.partyType == 'NATIONAL'}">
-                                            <span class="badge badge-blue">NATIONAL</span>
-                                        </c:when>
-                                        <c:when test="${candidate.partyType == 'REGIONAL'}">
-                                            <span class="badge badge-orange">REGIONAL</span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span class="badge badge-gray">INDEPENDENT</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <c:if test="${not empty candidate.symbol}">
-                                        <span class="text-lg">${candidate.symbol}</span>
-                                    </c:if>
+                                <input type="radio" name="candidateId" value="${candidate.id}" class="hidden" onchange="updateSelection(this)">
+                                <div class="radio-custom"></div>
+                            </label>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <!-- Dummy data if no candidates present to show the UI -->
+                        <label class="candidate-card bg-white p-5 rounded-xl shadow-sm flex items-center justify-between cursor-pointer">
+                            <div class="flex items-center gap-5">
+                                <div class="w-14 h-14 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center border-2 border-gray-100">
+                                    <img src="https://ui-avatars.com/api/?name=Aris+Thorne&background=1e3a8a&color=fff" alt="Dr. Aris Thorne" class="w-full h-full object-cover">
                                 </div>
-
-                                <!-- Radio indicator -->
-                                <div class="flex items-center justify-end">
-                                    <div class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center radio-indicator">
-                                        <div class="w-2.5 h-2.5 rounded-full bg-primary scale-0 transition-transform"></div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-[#1e3a8a] mb-1">Dr. Aris Thorne</h3>
+                                    <p class="text-sm text-gray-600 mb-1">Progressive Unity Party (PUP)</p>
+                                    <div class="flex items-center gap-1.5 text-xs font-bold text-blue-600 uppercase tracking-wide">
+                                        <i class="fas fa-check-circle"></i> Verified Candidate
                                     </div>
                                 </div>
                             </div>
-                        </c:forEach>
-                    </div>
+                            <input type="radio" name="candidateId" value="1" class="hidden" onchange="updateSelection(this)">
+                            <div class="radio-custom"></div>
+                        </label>
+                        
+                        <label class="candidate-card bg-white p-5 rounded-xl shadow-sm flex items-center justify-between cursor-pointer">
+                            <div class="flex items-center gap-5">
+                                <div class="w-14 h-14 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center border-2 border-gray-100">
+                                    <img src="https://ui-avatars.com/api/?name=Maya+Sterling&background=b91c1c&color=fff" alt="Maya V. Sterling" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-[#1e3a8a] mb-1">Maya V. Sterling</h3>
+                                    <p class="text-sm text-gray-600 mb-1">Reform Alliance Collective</p>
+                                    <div class="flex items-center gap-1.5 text-xs font-bold text-gray-500 uppercase tracking-wide">
+                                        <i class="fas fa-shield-alt"></i> Independent Nominee
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="radio" name="candidateId" value="2" class="hidden" onchange="updateSelection(this)">
+                            <div class="radio-custom"></div>
+                        </label>
 
-                    <!-- Confirmation Section -->
-                    <div class="card bg-surface-container-low animate-fade-in" id="vote-confirmation-section">
-                        <div class="flex items-center gap-2 mb-4">
-                            <span class="text-sm font-medium text-on-surface">Step 2:</span>
-                            <span class="text-sm text-on-surface-variant">Confirm your vote</span>
-                        </div>
+                        <label class="candidate-card bg-white p-5 rounded-xl shadow-sm flex items-center justify-between cursor-pointer">
+                            <div class="flex items-center gap-5">
+                                <div class="w-14 h-14 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center border-2 border-gray-100">
+                                    <img src="https://ui-avatars.com/api/?name=Julian+Oak&background=15803d&color=fff" alt="Julian Oak" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-[#1e3a8a] mb-1">Julian Oak</h3>
+                                    <p class="text-sm text-gray-600 mb-1">Environmental Stewardship Front</p>
+                                    <div class="flex items-center gap-1.5 text-xs font-bold text-blue-600 uppercase tracking-wide">
+                                        <i class="fas fa-check-circle"></i> Verified Candidate
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="radio" name="candidateId" value="3" class="hidden" onchange="updateSelection(this)">
+                            <div class="radio-custom"></div>
+                        </label>
+                    </c:otherwise>
+                </c:choose>
 
-                        <!-- Selected Candidate Display -->
-                        <div class="bg-white rounded-xl p-4 mb-4">
-                            <p class="text-sm text-on-surface-variant mb-1">You are about to vote for:</p>
-                            <p class="font-manrope text-xl font-bold text-primary" id="selected-candidate-name">No candidate selected</p>
+                <!-- NOTA Option -->
+                <label class="candidate-card bg-white p-5 rounded-xl shadow-sm flex items-center justify-between cursor-pointer">
+                    <div class="flex items-center gap-5">
+                        <div class="w-14 h-14 rounded-full bg-gray-200 text-gray-500 overflow-hidden flex items-center justify-center border-2 border-gray-100 text-xl">
+                            <i class="fas fa-ban"></i>
                         </div>
-
-                        <!-- Warning -->
-                        <div class="alert alert-warning mb-6">
-                            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
-                            </svg>
-                            <p class="text-sm">
-                                <strong>This action cannot be undone.</strong> Once confirmed, your vote will be permanently recorded and cannot be changed.
-                            </p>
-                        </div>
-
-                        <!-- Action Buttons -->
-                        <div class="flex flex-col sm:flex-row gap-3">
-                            <button type="button" id="confirm-vote-btn" class="btn-primary btn-xl flex-1 justify-center">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                </svg>
-                                Confirm Vote
-                            </button>
-                            <a href="${pageContext.request.contextPath}/voter/dashboard" class="btn-outline flex-1 justify-center">
-                                Cancel
-                            </a>
-                        </div>
-                    </div>
-                </form>
-
-                <!-- Vote Confirmation Modal -->
-                <div id="vote-confirm-modal" class="modal-overlay">
-                    <div class="modal-content text-center">
-                        <div class="w-16 h-16 bg-primary-light rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg class="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                            </svg>
-                        </div>
-                        <h3 class="font-manrope text-xl font-bold text-on-surface mb-2">Confirm Your Vote</h3>
-                        <p class="text-on-surface-variant mb-1">Are you sure you want to vote for:</p>
-                        <p class="font-manrope text-lg font-bold text-primary mb-4" id="modal-candidate-name">--</p>
-                        <p class="text-sm text-red-600 font-medium mb-6">This action is final and cannot be undone.</p>
-                        <div class="flex gap-3">
-                            <button type="button" id="vote-proceed-btn" class="btn-primary flex-1 justify-center">
-                                Yes, Cast My Vote
-                            </button>
-                            <button type="button" id="vote-cancel-btn" class="btn-outline flex-1 justify-center">
-                                Go Back
-                            </button>
+                        <div>
+                            <h3 class="text-xl font-bold text-[#1e3a8a] mb-1">None of the Above (NOTA)</h3>
+                            <p class="text-sm text-gray-600 mb-1">Decline all registered candidates</p>
                         </div>
                     </div>
-                </div>
+                    <input type="radio" name="candidateId" value="-1" class="hidden" onchange="updateSelection(this)">
+                    <div class="radio-custom"></div>
+                </label>
+                
+            </div>
 
-            </c:otherwise>
-        </c:choose>
+            <!-- Confirmation Box -->
+            <div class="bg-gray-100 rounded-xl p-8 flex flex-col items-center shadow-inner">
+                <label class="flex items-center gap-3 cursor-pointer mb-6">
+                    <input type="checkbox" id="confirmCheckbox" class="w-5 h-5 rounded border-gray-300 text-[#1e3a8a] focus:ring-[#1e3a8a]" onchange="toggleSubmitButton()">
+                    <span class="text-sm font-medium text-gray-800">I confirm that this is my final selection.</span>
+                </label>
 
-        <!-- Footer -->
-        <footer class="text-center py-6 text-sm text-on-surface-variant mt-8">
-            <p>&copy; 2025 NirvachanSetu &mdash; Election Commission of Nepal. All rights reserved.</p>
-        </footer>
+                <button type="button" id="submitBtn" disabled class="bg-[#1e3a8a] text-white font-bold text-lg py-4 px-12 rounded-lg shadow-md w-full max-w-sm flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-900 transition-colors" onclick="submitVote()">
+                    <i class="fas fa-user-lock"></i> Cast Vote
+                </button>
+                
+                <p class="text-xs font-bold text-gray-400 tracking-widest mt-6">SECURE ENCRYPTION ENABLED</p>
+            </div>
+        </form>
+
     </main>
 
-    <script src="${pageContext.request.contextPath}/js/app.js?v=2"></script>
+    <jsp:include page="../layout/footer.jsp" />
+
+    <script>
+        function updateSelection(radioInput) {
+            // Remove 'selected' class from all cards
+            document.querySelectorAll('.candidate-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            // Add 'selected' class to the checked radio's parent label
+            if (radioInput.checked) {
+                radioInput.closest('.candidate-card').classList.add('selected');
+            }
+            toggleSubmitButton();
+        }
+
+        function toggleSubmitButton() {
+            const hasCandidate = document.querySelector('input[name="candidateId"]:checked') !== null;
+            const isConfirmed = document.getElementById('confirmCheckbox').checked;
+            document.getElementById('submitBtn').disabled = !(hasCandidate && isConfirmed);
+        }
+
+        function submitVote() {
+            const hasCandidate = document.querySelector('input[name="candidateId"]:checked') !== null;
+            const isConfirmed = document.getElementById('confirmCheckbox').checked;
+            
+            if (hasCandidate && isConfirmed) {
+                // Submit form
+                document.getElementById('voteForm').submit();
+            }
+        }
+    </script>
 </body>
 </html>
