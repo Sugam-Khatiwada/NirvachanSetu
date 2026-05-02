@@ -12,6 +12,10 @@
 </head>
 <body class="bg-background font-inter text-on-surface">
 
+    <jsp:include page="/layout/header.jsp" />
+
+    
+
     <!-- Sidebar Overlay (mobile) -->
     <div id="sidebar-overlay" class="sidebar-overlay"></div>
 
@@ -461,10 +465,6 @@
             </c:otherwise>
         </c:choose>
 
-        <!-- Footer -->
-        <footer class="text-center py-6 text-sm text-on-surface-variant mt-8">
-            <p>&copy; 2025 NirvachanSetu &mdash; Election Commission of Nepal. All rights reserved.</p>
-        </footer>
     </main>
 
     <script src="${pageContext.request.contextPath}/js/app.js"></script>

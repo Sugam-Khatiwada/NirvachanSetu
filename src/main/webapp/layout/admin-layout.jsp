@@ -21,9 +21,6 @@
 
     <!-- Main Content Area Wrapper -->
     <div class="flex-1 flex flex-col overflow-hidden">
-        <!-- Include the Header / Top Navbar -->
-        <jsp:include page="/layout/header.jsp" />
-
         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
             <div class="container mx-auto px-6 py-8">
                 <!-- MAIN PAGE CONTENT STARTS HERE -->

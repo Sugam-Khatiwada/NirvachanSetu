@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NirvachanSetu - Voter Dashboard</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --primary-blue: #1a4093;
@@ -21,7 +23,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg-color); color: var(--text-dark); line-height: 1.5; }
+        body { font-family: 'Inter', system-ui, sans-serif; line-height: 1.5; }
         a { text-decoration: none; color: inherit; }
         .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
         
@@ -114,8 +116,11 @@
         .footer-links a:hover { color: var(--text-dark); }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800">
 
+<!-- Navbar -->
+<c:set var="activePage" value="dashboard" scope="request" />
+<jsp:include page="../layout/header.jsp" />
 
 <main class="main-content container">
     <div class="top-grid">
@@ -292,4 +297,7 @@
 
 </main>
 
+    <jsp:include page="../layout/footer.jsp" />
 
+</body>
+</html>

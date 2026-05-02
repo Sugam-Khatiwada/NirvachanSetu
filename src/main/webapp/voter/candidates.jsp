@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NirvachanSetu - Candidates</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --primary-blue: #1a4093;
@@ -20,7 +22,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', system-ui, sans-serif; background-color: var(--bg-color); color: var(--text-dark); line-height: 1.5; }
+        body { font-family: 'Inter', system-ui, sans-serif; line-height: 1.5; }
         a { text-decoration: none; color: inherit; }
         .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
         
@@ -129,8 +131,10 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800">
 
+<c:set var="activePage" value="candidates" scope="request" />
+<jsp:include page="../layout/header.jsp" />
 
 <main class="main-content container">
     <!-- Header -->
@@ -246,6 +250,7 @@
     </div>
 </main>
 
+<jsp:include page="../layout/footer.jsp" />
 
 </body>
 </html>

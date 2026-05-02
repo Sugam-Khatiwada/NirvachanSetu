@@ -2,185 +2,77 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
-<header class="sticky top-0 z-50 bg-surface-container-lowest/95 backdrop-blur-md shadow-sm">
-    <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-
+<header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+    <nav class="px-6 py-3">
+        <div class="flex items-center justify-between">
             <!-- Left: Logo -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center">
                 <a href="${pageContext.request.contextPath}/" class="flex items-center gap-2 no-underline">
-                    <svg class="w-8 h-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7" rx="1"/>
-                        <rect x="14" y="3" width="7" height="7" rx="1"/>
-                        <rect x="8.5" y="14" width="7" height="7" rx="1"/>
-                    </svg>
-                    <span class="font-manrope font-bold text-xl text-primary">NirvachanSetu</span>
+                    <span class="font-bold text-base text-blue-900">NirvachanSetu</span>
                 </a>
             </div>
 
-            <!-- Center: Navigation Links (hidden on mobile) -->
-            <nav class="hidden md:flex items-center gap-1">
+            <!-- Center: Navigation Links -->
+            <div class="flex items-center gap-8">
                 <c:choose>
                     <c:when test="${sessionScope.role == 'ADMIN'}">
-                        <a href="${pageContext.request.contextPath}/admin/dashboard"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'dashboard' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Dashboard</a>
-                        <a href="${pageContext.request.contextPath}/admin/users"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'users' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Users</a>
-                        <a href="${pageContext.request.contextPath}/admin/candidates"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'candidates' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Candidates</a>
-                        <a href="${pageContext.request.contextPath}/admin/elections"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'elections' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Elections</a>
-                        <a href="${pageContext.request.contextPath}/admin/constituencies"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'constituencies' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Constituencies</a>
-                        <a href="${pageContext.request.contextPath}/admin/results"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'results' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Results</a>
-                    </c:when>
-                    <c:when test="${sessionScope.role == 'VOTER'}">
-                        <a href="${pageContext.request.contextPath}/voter/dashboard"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'dashboard' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Dashboard</a>
-                        <a href="${pageContext.request.contextPath}/voter/candidates"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'candidates' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Candidates</a>
-                        <a href="${pageContext.request.contextPath}/voter/cast-vote"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'vote' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Vote</a>
-                        <a href="${pageContext.request.contextPath}/voter/results"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'results' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Results</a>
-                        <a href="${pageContext.request.contextPath}/voter/profile"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'profile' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Profile</a>
+                        <a href="${pageContext.request.contextPath}/admin/dashboard" class="text-sm font-medium hover:text-blue-700 transition-colors ${requestScope.activePage == 'dashboard' ? 'text-gray-700 font-semibold pb-1 border-b-2 border-blue-700' : 'text-gray-600'}">Admin Dashboard</a>
                     </c:when>
                     <c:when test="${sessionScope.role == 'CANDIDATE'}">
-                        <a href="${pageContext.request.contextPath}/candidate/dashboard"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'dashboard' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Dashboard</a>
-                        <a href="${pageContext.request.contextPath}/candidate/application"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'apply' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Apply</a>
-                        <a href="${pageContext.request.contextPath}/candidate/manifesto"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'manifesto' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Manifesto</a>
-                        <a href="${pageContext.request.contextPath}/candidate/profile"
-                           class="px-3 py-2 rounded-lg text-sm font-medium font-inter transition-colors duration-150 ${requestScope.activePage == 'profile' ? 'bg-primary text-white' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface'}">Profile</a>
+                        <a href="${pageContext.request.contextPath}/candidate/dashboard" class="text-sm font-medium hover:text-blue-700 transition-colors ${requestScope.activePage == 'dashboard' ? 'text-gray-700 font-semibold pb-1 border-b-2 border-blue-700' : 'text-gray-600'}">Candidate Dashboard</a>
+                        <a href="${pageContext.request.contextPath}/voter/cast-vote" class="text-sm font-medium hover:text-blue-700 transition-colors ${requestScope.activePage == 'vote' ? 'text-gray-700 font-semibold pb-1 border-b-2 border-blue-700' : 'text-gray-600'}">Vote</a>
                     </c:when>
+                    <c:otherwise>
+                        <a href="${pageContext.request.contextPath}/voter/dashboard" class="text-sm font-medium hover:text-blue-700 transition-colors ${requestScope.activePage == 'dashboard' ? 'text-gray-700 font-semibold pb-1 border-b-2 border-blue-700' : 'text-gray-600'}">Dashboard</a>
+                        <a href="${pageContext.request.contextPath}/voter/candidates" class="text-sm font-medium hover:text-blue-700 transition-colors ${requestScope.activePage == 'candidates' ? 'text-gray-700 font-semibold pb-1 border-b-2 border-blue-700' : 'text-gray-600'}">Candidates</a>
+                        <a href="${pageContext.request.contextPath}/voter/cast-vote" class="text-sm font-medium hover:text-blue-700 transition-colors ${requestScope.activePage == 'vote' ? 'text-gray-700 font-semibold pb-1 border-b-2 border-blue-700' : 'text-gray-600'}">Vote</a>
+                        <a href="${pageContext.request.contextPath}/voter/results" class="text-sm font-medium hover:text-blue-700 transition-colors ${requestScope.activePage == 'results' ? 'text-gray-700 font-semibold pb-1 border-b-2 border-blue-700' : 'text-gray-600'}">Results</a>
+                    </c:otherwise>
                 </c:choose>
-            </nav>
+            </div>
 
-            <!-- Right: Notifications + User -->
-            <div class="flex items-center gap-3">
+            <!-- Right: Search & Avatar -->
+            <div class="flex items-center gap-4">
+                <!-- Search Bar -->
+                <div class="relative">
+                    <input type="text" placeholder="Search elections..." class="bg-gray-100 text-gray-700 text-sm rounded-md py-2 px-3 w-48 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all">
+                </div>
+
                 <!-- Notification Bell -->
-                <button class="relative p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors duration-150" aria-label="Notifications">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                <button class="relative text-gray-600 hover:text-blue-700 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                     </svg>
-                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                    <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
 
-                <!-- User Dropdown -->
+                <!-- User Avatar & Dropdown -->
                 <c:if test="${not empty sessionScope.user}">
                     <div class="relative" id="userDropdown">
-                        <button onclick="toggleDropdown()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-surface-container-low transition-colors duration-150">
-                            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                                <svg class="w-4 h-4 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="12" cy="7" r="4"/>
-                                </svg>
-                            </div>
-                            <span class="hidden sm:block text-sm font-medium text-on-surface font-inter">${sessionScope.user.fullName}</span>
-                            <svg class="hidden sm:block w-4 h-4 text-on-surface-variant" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="6 9 12 15 18 9"/>
-                            </svg>
+                        <button onclick="toggleDropdown()" class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-700 text-white text-sm font-bold hover:bg-gray-800 transition-colors">
+                            ${fn:substring(sessionScope.user.fullName, 0, 1)}
                         </button>
-
+                        
                         <!-- Dropdown Menu -->
-                        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-surface-container-lowest rounded-xl shadow-lg py-2 z-50">
-                            <div class="px-4 py-2 border-b border-surface-container-low">
-                                <p class="text-sm font-medium text-on-surface font-inter">${sessionScope.user.fullName}</p>
-                                <p class="text-xs text-on-surface-variant font-inter">${sessionScope.role}</p>
-                            </div>
-                            <a href="${pageContext.request.contextPath}/${sessionScope.role != null ? fn:toLowerCase(sessionScope.role) : ''}/profile" class="flex items-center gap-2 px-4 py-2 text-sm text-on-surface-variant hover:bg-surface-container-low font-inter transition-colors">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="12" cy="7" r="4"/>
-                                </svg>
-                                My Profile
-                            </a>
-                            <a href="${pageContext.request.contextPath}/logout" class="flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50 font-inter transition-colors">
-                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                                    <polyline points="16 17 21 12 16 7"/>
-                                    <line x1="21" y1="12" x2="9" y2="12"/>
-                                </svg>
-                                Logout
-                            </a>
+                        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-200">
+                            <c:set var="profilePath" value="/voter/profile" />
+                            <c:if test="${sessionScope.role == 'CANDIDATE'}"><c:set var="profilePath" value="/candidate/profile" /></c:if>
+                            <c:if test="${sessionScope.role == 'ADMIN'}"><c:set var="profilePath" value="/admin/dashboard" /></c:if>
+                            
+                            <a href="${pageContext.request.contextPath}${profilePath}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">Profile</a>
+                            <a href="${pageContext.request.contextPath}/logout" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">Logout</a>
                         </div>
                     </div>
                 </c:if>
-
-                <!-- Mobile Hamburger Menu -->
-                <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors duration-150" aria-label="Toggle menu">
-                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="menuIcon">
-                        <line x1="3" y1="6" x2="21" y2="6"/>
-                        <line x1="3" y1="12" x2="21" y2="12"/>
-                        <line x1="3" y1="18" x2="21" y2="18"/>
-                    </svg>
-                </button>
             </div>
         </div>
-
-        <!-- Mobile Navigation Menu -->
-        <div id="mobileMenu" class="hidden md:hidden pb-4">
-            <nav class="flex flex-col gap-1">
-                <c:choose>
-                    <c:when test="${sessionScope.role == 'ADMIN'}">
-                        <a href="${pageContext.request.contextPath}/admin/dashboard" class="sidebar-link ${requestScope.activePage == 'dashboard' ? 'sidebar-link-active' : ''}">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="8.5" y="14" width="7" height="7" rx="1"/></svg>
-                            Dashboard
-                        </a>
-                        <a href="${pageContext.request.contextPath}/admin/users" class="sidebar-link ${requestScope.activePage == 'users' ? 'sidebar-link-active' : ''}">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                            Users
-                        </a>
-                        <a href="${pageContext.request.contextPath}/admin/candidates" class="sidebar-link ${requestScope.activePage == 'candidates' ? 'sidebar-link-active' : ''}">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-                            Candidates
-                        </a>
-                        <a href="${pageContext.request.contextPath}/admin/elections" class="sidebar-link ${requestScope.activePage == 'elections' ? 'sidebar-link-active' : ''}">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                            Elections
-                        </a>
-                        <a href="${pageContext.request.contextPath}/admin/constituencies" class="sidebar-link ${requestScope.activePage == 'constituencies' ? 'sidebar-link-active' : ''}">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            Constituencies
-                        </a>
-                        <a href="${pageContext.request.contextPath}/admin/results" class="sidebar-link ${requestScope.activePage == 'results' ? 'sidebar-link-active' : ''}">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-                            Results
-                        </a>
-                    </c:when>
-                    <c:when test="${sessionScope.role == 'VOTER'}">
-                        <a href="${pageContext.request.contextPath}/voter/dashboard" class="sidebar-link ${requestScope.activePage == 'dashboard' ? 'sidebar-link-active' : ''}">Dashboard</a>
-                        <a href="${pageContext.request.contextPath}/voter/candidates" class="sidebar-link ${requestScope.activePage == 'candidates' ? 'sidebar-link-active' : ''}">Candidates</a>
-                        <a href="${pageContext.request.contextPath}/voter/cast-vote" class="sidebar-link ${requestScope.activePage == 'vote' ? 'sidebar-link-active' : ''}">Vote</a>
-                        <a href="${pageContext.request.contextPath}/voter/results" class="sidebar-link ${requestScope.activePage == 'results' ? 'sidebar-link-active' : ''}">Results</a>
-                        <a href="${pageContext.request.contextPath}/voter/profile" class="sidebar-link ${requestScope.activePage == 'profile' ? 'sidebar-link-active' : ''}">Profile</a>
-                    </c:when>
-                    <c:when test="${sessionScope.role == 'CANDIDATE'}">
-                        <a href="${pageContext.request.contextPath}/candidate/dashboard" class="sidebar-link ${requestScope.activePage == 'dashboard' ? 'sidebar-link-active' : ''}">Dashboard</a>
-                        <a href="${pageContext.request.contextPath}/candidate/application" class="sidebar-link ${requestScope.activePage == 'apply' ? 'sidebar-link-active' : ''}">Apply</a>
-                        <a href="${pageContext.request.contextPath}/candidate/manifesto" class="sidebar-link ${requestScope.activePage == 'manifesto' ? 'sidebar-link-active' : ''}">Manifesto</a>
-                        <a href="${pageContext.request.contextPath}/candidate/profile" class="sidebar-link ${requestScope.activePage == 'profile' ? 'sidebar-link-active' : ''}">Profile</a>
-                    </c:when>
-                </c:choose>
-            </nav>
-        </div>
-    </div>
+    </nav>
 </header>
 
 <script>
     function toggleDropdown() {
         const menu = document.getElementById('dropdownMenu');
-        menu.classList.toggle('hidden');
-    }
-
-    function toggleMobileMenu() {
-        const menu = document.getElementById('mobileMenu');
-        menu.classList.toggle('hidden');
+        if (menu) menu.classList.toggle('hidden');
     }
 
     // Close dropdown when clicking outside

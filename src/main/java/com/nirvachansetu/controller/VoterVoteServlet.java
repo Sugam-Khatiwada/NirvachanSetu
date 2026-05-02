@@ -51,28 +51,23 @@ public class VoterVoteServlet extends HttpServlet {
 
             // Get active elections
             List<Election> activeElections = electionService.getActiveElections();
+            Election election = null;
+            
+            if (activeElections != null && !activeElections.isEmpty()) {
+                election = activeElections.get(0);
+                // Check if the user has already voted in this election
+                boolean hasVoted = voteService.hasVoted(election.getId(), user.getId());
 
-            if (activeElections == null || activeElections.isEmpty()) {
-                request.setAttribute("error", "No active elections available for voting at this time.");
-                request.getRequestDispatcher("/voter/dashboard.jsp").forward(request, response);
-                return;
-            }
-
-            // Use the first active election
-            Election election = activeElections.get(0);
-
-            // Check if the user has already voted in this election
-            boolean hasVoted = voteService.hasVoted(election.getId(), user.getId());
-
-            if (hasVoted) {
-                request.setAttribute("message", "You have already cast your vote in this election.");
-                request.getRequestDispatcher("/voter/dashboard.jsp").forward(request, response);
-                return;
+                if (hasVoted) {
+                    request.setAttribute("alreadyVoted", true);
+                }
             }
 
             // Get competing candidates in the voter's constituency
-            List<Candidate> candidates = candidateService.getCompetingCandidates(
-                    election.getId(), constituency.getId());
+            List<Candidate> candidates = null;
+            if (election != null && constituency != null) {
+                candidates = candidateService.getCompetingCandidates(election.getId(), constituency.getId());
+            }
 
             request.setAttribute("election", election);
             request.setAttribute("candidates", candidates);

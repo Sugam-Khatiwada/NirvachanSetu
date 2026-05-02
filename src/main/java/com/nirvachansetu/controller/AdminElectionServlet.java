@@ -97,6 +97,7 @@ public class AdminElectionServlet extends HttpServlet {
                     election.setElectionType(Election.ElectionType.valueOf(electionType));
                     election.setStartDate(startDate);
                     election.setEndDate(endDate);
+                    // Update election status
                     election.setStatus(Election.ElectionStatus.valueOf(status));
 
                     if (constituencyIdStr != null && !constituencyIdStr.isEmpty()) {
@@ -106,18 +107,6 @@ public class AdminElectionServlet extends HttpServlet {
                     }
 
                     electionService.updateElection(election);
-
-                    // When election changes to ACTIVE, revert all candidates back to VOTER role
-                    String newStatus = status.toUpperCase();
-                    if ("ACTIVE".equals(newStatus) && !"ACTIVE".equals(oldStatus)) {
-                        candidateService.revertCandidatesToVoters(electionId);
-                    }
-
-                    // When election changes to COMPLETED, also revert any remaining CANDIDATE users to VOTER
-                    // (safety net in case admin skipped ACTIVE or for new elections)
-                    if ("COMPLETED".equals(newStatus) && !"COMPLETED".equals(oldStatus)) {
-                        candidateService.revertCandidatesToVoters(electionId);
-                    }
 
                     request.getSession().setAttribute("success", "Election updated successfully.");
                 }
