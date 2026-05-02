@@ -25,7 +25,7 @@ import java.util.Map;
  * - Competing candidates
  * - Vote count received
  */
-@WebServlet("/candidate/dashboard")
+@WebServlet({"/candidate/dashboard", "/candidate/competitors", "/candidate/competing"})
 public class CandidateDashboardServlet extends HttpServlet {
 
     private CandidateService candidateService = new CandidateService();
@@ -79,6 +79,14 @@ public class CandidateDashboardServlet extends HttpServlet {
                 }
             }
 
+            // Calculate total votes in constituency for reach percentages
+            long totalConstituencyVotes = 0;
+            if (competingCandidates != null) {
+                for (Candidate c : competingCandidates) {
+                    totalConstituencyVotes += (c.getTotalVotes() != null ? c.getTotalVotes() : 0);
+                }
+            }
+
             // Set request attributes
             request.setAttribute("user", user);
             request.setAttribute("candidate", candidate);
@@ -88,13 +96,25 @@ public class CandidateDashboardServlet extends HttpServlet {
             request.setAttribute("competingCandidates", competingCandidates);
             request.setAttribute("totalVotes", totalVotes);
             request.setAttribute("votePercentage", votePercentage);
+            request.setAttribute("totalConstituencyVotes", totalConstituencyVotes);
 
-            request.getRequestDispatcher("/candidate/dashboard.jsp").forward(request, response);
+            // Choose view based on path
+            String path = request.getServletPath();
+            if ("/candidate/competitors".equals(path) || "/candidate/competing".equals(path)) {
+                request.getRequestDispatcher("/candidate/competing.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("/candidate/dashboard.jsp").forward(request, response);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Error loading dashboard: " + e.getMessage());
-            request.getRequestDispatcher("/candidate/dashboard.jsp").forward(request, response);
+            String path = request.getServletPath();
+            if ("/candidate/competitors".equals(path) || "/candidate/competing".equals(path)) {
+                request.getRequestDispatcher("/candidate/competing.jsp").forward(request, response);
+            } else {
+                request.getRequestDispatcher("/candidate/dashboard.jsp").forward(request, response);
+            }
         }
     }
 }

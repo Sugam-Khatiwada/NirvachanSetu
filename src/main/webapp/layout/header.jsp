@@ -2,6 +2,49 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
+<style>
+  header {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.95) 100%);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 3px rgba(15, 58, 151, 0.1);
+  }
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+
+  .header-logo:hover {
+    transform: scale(1.02);
+  }
+
+  .header-logo svg {
+    width: 2rem;
+    height: 2rem;
+    color: #0f3a97;
+  }
+
+  .header-logo-text {
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #0f3a97;
+    letter-spacing: -0.02em;
+  }
+
+  .nav-link {
+    transition: all 0.2s ease;
+  }
+
+  .nav-link.active {
+    background: #0f3a97;
+    color: white;
+  }
+</style>
+
 <header class="sticky top-0 z-50 bg-surface-container-lowest/95 backdrop-blur-md shadow-sm">
     <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">

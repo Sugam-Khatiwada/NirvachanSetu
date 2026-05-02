@@ -89,6 +89,6 @@ public class CandidateManifestoServlet extends HttpServlet {
             request.getSession().setAttribute("error", "Error updating manifesto: " + e.getMessage());
         }
 
-        response.sendRedirect(request.getContextPath() + "/candidate/manifesto");
+        response.sendRedirect(request.getContextPath() + "/candidate/profile");
     }
 }
