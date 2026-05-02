@@ -13,6 +13,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.annotation.MultipartConfig;
+import jakarta.servlet.http.Part;
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,6 +30,11 @@ import java.util.List;
  * - POST: Submit a new candidate application
  */
 @WebServlet("/candidate/application")
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+    maxFileSize = 1024 * 1024 * 10,      // 10MB
+    maxRequestSize = 1024 * 1024 * 50    // 50MB
+)
 public class CandidateApplicationServlet extends HttpServlet {
 
     private CandidateService candidateService = new CandidateService();
@@ -76,6 +88,20 @@ public class CandidateApplicationServlet extends HttpServlet {
                 return;
             }
 
+            // Handle file uploads
+            String uploadPath = getServletContext().getRealPath("/") + "uploads" + File.separator + "candidate" + File.separator + "docs";
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) uploadDir.mkdirs();
+
+            Part idProofPart = request.getPart("idProof");
+            Part declarationPart = request.getPart("declaration");
+            Part partyEvidencePart = request.getPart("partyEvidence");
+
+            String idProofFileName = saveFile(idProofPart, uploadPath);
+            String declarationFileName = saveFile(declarationPart, uploadPath);
+            String partyEvidenceFileName = saveFile(partyEvidencePart, uploadPath);
+
+            // Get form parameters
             String electionIdStr = request.getParameter("electionId");
             String constituencyIdStr = request.getParameter("constituencyId");
             String partyName = request.getParameter("partyName");
@@ -102,13 +128,16 @@ public class CandidateApplicationServlet extends HttpServlet {
             application.setPartyType(CandidateApplication.PartyType.valueOf(partyType));
             application.setManifesto(manifesto);
             application.setSymbol(symbol);
+            application.setIdProofPath("uploads/candidate/docs/" + idProofFileName);
+            application.setDeclarationPath("uploads/candidate/docs/" + declarationFileName);
+            application.setPartyEvidencePath("uploads/candidate/docs/" + partyEvidenceFileName);
             application.setStatus(CandidateApplication.ApplicationStatus.PENDING);
 
             // Save the application
             candidateService.applyForElection(application);
 
             request.getSession().setAttribute("success",
-                    "Your application has been submitted successfully! It is now pending admin approval.");
+                    "Your application and documents have been submitted successfully! It is now pending admin approval.");
 
         } catch (NumberFormatException e) {
             request.getSession().setAttribute("error", "Invalid election or constituency ID.");
@@ -118,5 +147,25 @@ public class CandidateApplicationServlet extends HttpServlet {
         }
 
         response.sendRedirect(request.getContextPath() + "/candidate/dashboard");
+    }
+
+    private String saveFile(Part part, String uploadPath) throws IOException {
+        if (part == null || part.getSize() == 0) return null;
+        
+        String originalFileName = part.getSubmittedFileName();
+        String extension = "";
+        int i = originalFileName.lastIndexOf('.');
+        if (i > 0) {
+            extension = originalFileName.substring(i);
+        }
+        
+        String fileName = UUID.randomUUID().toString() + extension;
+        File file = new File(uploadPath + File.separator + fileName);
+        
+        try (InputStream input = part.getInputStream()) {
+            Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
+        
+        return fileName;
     }
 }

@@ -1,602 +1,752 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NirvachanSetu - Constituency Competitors</title>
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/css/output.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constituency Competitors - NirvachanSetu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #1e1b4b;
+            --sidebar-hover: #312e81;
+            --sidebar-active: #2563eb;
+            --bg-main: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --card-bg: #ffffff;
+            --primary: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+            --accent: #4f46e5;
+        }
 
-  <style>
-    :root {
-      --dash-bg: #f3f6fc;
-      --dash-surface: #ffffff;
-      --dash-border: #e4eaf5;
-      --dash-text: #0f172a;
-      --dash-muted: #64748b;
-      --dash-primary: #12337f;
-      --dash-primary-2: #1f4fcc;
-      --dash-soft: #eff4ff;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
 
-    body {
-      margin: 0;
-      color: var(--dash-text);
-      background:
-        radial-gradient(120% 130% at 0% 0%, #e9f0ff 0%, rgba(233, 240, 255, 0) 54%),
-        linear-gradient(180deg, #f6f8fd 0%, #eef2f8 100%);
-    }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    .candidate-shell {
-      max-width: 1380px;
-      margin: 0 auto;
-      padding: 1.1rem;
-    }
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 1.5rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 1400px;
+        }
 
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: 250px minmax(0, 1fr);
-      gap: 1rem;
-      align-items: start;
-    }
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.5rem;
+        }
 
-    .panel {
-      border: 1px solid var(--dash-border);
-      border-radius: 1rem;
-      background: var(--dash-surface);
-      box-shadow: 0 10px 18px -14px rgba(15, 58, 151, 0.35);
-    }
+        .search-container {
+            position: relative;
+            width: 420px;
+        }
 
-    .content-col {
-      display: flex;
-      flex-direction: column;
-      gap: 0.95rem;
-    }
+        .search-container input {
+            width: 100%;
+            padding: 0.8rem 1.25rem 0.8rem 3rem;
+            border-radius: 2rem;
+            border: 1px solid var(--border);
+            background-color: #f1f5f9;
+            outline: none;
+            font-size: 0.9rem;
+        }
 
-    .alert-strip {
-      padding: 0.72rem 0.85rem;
-      border-radius: 0.72rem;
-      font-size: 0.82rem;
-      border: 1px solid;
-    }
+        .search-container svg {
+            position: absolute;
+            left: 1.1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1.15rem;
+            height: 1.15rem;
+            color: var(--text-secondary);
+        }
 
-    .alert-error {
-      background: #fef2f2;
-      color: #b91c1c;
-      border-color: #fecaca;
-    }
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
 
-    .hero-head {
-      padding: 1rem 1.05rem;
-      border: 1px solid #dce5f9;
-      border-radius: 1rem;
-      background: linear-gradient(180deg, #f9fbff 0%, #f2f6ff 100%);
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding-left: 1.25rem;
+            border-left: 1.5px solid var(--border);
+        }
 
-    .hero-title-wrap h1 {
-      margin: 0;
-      font-size: clamp(1.2rem, 2vw, 1.8rem);
-      line-height: 1.18;
-      font-weight: 800;
-      color: #0f2f74;
-    }
+        .user-avatar {
+            width: 2.75rem;
+            height: 2.75rem;
+            border-radius: 50%;
+            background-color: #f1f5f9;
+            overflow: hidden;
+        }
 
-    .hero-title-wrap p {
-      margin: 0.35rem 0 0;
-      color: #556379;
-      font-size: 0.83rem;
-      font-weight: 600;
-    }
+        /* Header Section */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 0.5rem;
+        }
 
-    .hero-actions {
-      display: flex;
-      gap: 0.55rem;
-      flex-wrap: wrap;
-    }
+        .header-title h1 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
 
-    .filter-chip {
-      border: 1px solid #d9e4fb;
-      border-radius: 0.66rem;
-      background: #ffffff;
-      color: #1d4ed8;
-      font-size: 0.74rem;
-      font-weight: 700;
-      padding: 0.5rem 0.62rem;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
+        .header-title p {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
 
-    .content-shell {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 0.9rem;
-    }
+        .header-title p span {
+            color: var(--primary);
+            font-weight: 800;
+        }
 
-    .lead-card {
-      padding: 1rem;
-      display: grid;
-      grid-template-columns: 140px minmax(0, 1fr);
-      gap: 1rem;
-      align-items: center;
-      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
-    }
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
 
-    .lead-photo {
-      border-radius: 0.8rem;
-      height: 120px;
-      background: radial-gradient(85% 120% at 50% 20%, #7cd4d8 0%, #0f3b72 68%, #0f2542 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffffff;
-      font-size: 2.5rem;
-      font-weight: 900;
-      letter-spacing: 0.03em;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22);
-    }
+        .btn-filter {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 0.6rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
 
-    .lead-meta small {
-      display: inline-block;
-      border-radius: 9999px;
-      background: #ffe9cb;
-      color: #7c2d12;
-      font-size: 0.64rem;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      padding: 0.24rem 0.48rem;
-      margin-bottom: 0.42rem;
-    }
+        /* Layout Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 1.5rem;
+        }
 
-    .lead-meta h2 {
-      margin: 0;
-      font-size: 1.26rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
+        .competitors-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
 
-    .lead-party {
-      margin-top: 0.3rem;
-      font-size: 0.78rem;
-      color: #556379;
-      font-weight: 600;
-    }
+        /* Featured Card */
+        .featured-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
 
-    .lead-summary {
-      margin: 0.56rem 0 0;
-      color: #64748b;
-      font-size: 0.78rem;
-      line-height: 1.46;
-      max-width: 70ch;
-    }
+        .featured-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+        }
 
-    .lead-footer {
-      margin-top: 0.8rem;
-      display: flex;
-      gap: 0.6rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
+        .candidate-img-container {
+            width: 240px;
+            height: 240px;
+            border-radius: 1rem;
+            background: #1e1b4b;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .party-pill {
-      border-radius: 9999px;
-      background: #edf3ff;
-      color: #12337f;
-      font-size: 0.7rem;
-      font-weight: 800;
-      padding: 0.34rem 0.55rem;
-    }
+        .candidate-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.75rem;
+        }
 
-    .link-btn {
-      text-decoration: none;
-      border-radius: 0.55rem;
-      padding: 0.36rem 0.56rem;
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #1d4ed8;
-      background: #eef4ff;
-    }
+        .badge-leading {
+            background: #fff7ed;
+            color: #c2410c;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            width: fit-content;
+        }
 
-    .competitor-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.9rem;
-    }
+        .party-tag {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
 
-    .mini-card {
-      padding: 0.82rem;
-      border: 1px solid #e5ebf7;
-      border-radius: 0.9rem;
-      background: #ffffff;
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-      min-height: 180px;
-    }
+        .candidate-name {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
 
-    .mini-top {
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-      justify-content: space-between;
-    }
+        .candidate-bio {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
 
-    .avatar {
-      width: 2.1rem;
-      height: 2.1rem;
-      border-radius: 0.65rem;
-      background: linear-gradient(160deg, #0f3a97 0%, #2d63d9 100%);
-      color: #ffffff;
-      font-size: 0.82rem;
-      font-weight: 800;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
+        .featured-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
 
-    .mini-party {
-      font-size: 0.62rem;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: 800;
-      text-align: right;
-    }
+        .party-alpha {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--primary);
+        }
 
-    .mini-card h3 {
-      margin: 0.1rem 0 0;
-      font-size: 0.92rem;
-      color: #0f172a;
-      font-weight: 800;
-      line-height: 1.2;
-    }
+        .view-profile-link {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
 
-    .mini-sub {
-      color: #6b7280;
-      font-size: 0.72rem;
-      margin: 0;
-      line-height: 1.35;
-      min-height: 28px;
-    }
+        /* Regular Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
 
-    .metric-label {
-      margin-top: auto;
-      color: #64748b;
-      font-size: 0.66rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
+        .competitor-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
-    .metric-value {
-      font-size: 0.76rem;
-      color: #12337f;
-      font-weight: 800;
-    }
+        .competitor-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
 
-    .meter {
-      position: relative;
-      height: 6px;
-      border-radius: 9999px;
-      background: #e7eefc;
-      overflow: hidden;
-      margin-top: 0.15rem;
-    }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
 
-    .meter > span {
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: var(--meter-width, 0%);
-      border-radius: 9999px;
-      background: linear-gradient(90deg, #2f62db 0%, #113688 100%);
-    }
+        .mini-avatar {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 0.75rem;
+            background: #1e1b4b;
+            overflow: hidden;
+        }
 
-    .mini-actions {
-      margin-top: 0.5rem;
-      border: 0;
-      border-radius: 0.58rem;
-      background: #f1f5ff;
-      color: #1f3d8f;
-      font-size: 0.71rem;
-      font-weight: 800;
-      padding: 0.46rem 0.58rem;
-      cursor: pointer;
-    }
+        .party-logo {
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 0.2rem;
+            text-align: center;
+        }
 
-    .insight-card {
-      background: linear-gradient(165deg, #12337f 0%, #1d4ec3 100%);
-      color: #dce7ff;
-      padding: 0.95rem;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 0.95rem;
-      box-shadow: 0 14px 24px -18px rgba(15, 58, 151, 0.9);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 180px;
-    }
+        .party-logo span {
+            font-size: 0.55rem;
+            font-weight: 800;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            line-height: 1;
+        }
 
-    .insight-card h3 {
-      margin: 0;
-      font-size: 1rem;
-      color: #ffffff;
-      font-weight: 800;
-    }
+        .card-body h3 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
 
-    .insight-stat {
-      margin-top: 0.55rem;
-      font-size: 0.74rem;
-      color: #dbe7ff;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.4rem;
-    }
+        .card-body p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
 
-    .insight-stat strong {
-      color: #ffffff;
-      font-size: 1rem;
-    }
+        .reach-section {
+            margin-top: auto;
+        }
 
-    .insight-btn {
-      margin-top: 0.8rem;
-      border: 0;
-      border-radius: 0.66rem;
-      background: #ffffff;
-      color: #12337f;
-      font-size: 0.74rem;
-      font-weight: 800;
-      padding: 0.5rem 0.65rem;
-      cursor: pointer;
-    }
+        .reach-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
 
-    .note-strip {
-      margin-top: 0.2rem;
-      border: 1px solid #dce4f4;
-      border-radius: 0.8rem;
-      background: #f8fbff;
-      padding: 0.8rem;
-      display: flex;
-      justify-content: space-between;
-      gap: 0.85rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
+        .progress-bar {
+            height: 6px;
+            background: #f1f5f9;
+            border-radius: 3px;
+            overflow: hidden;
+        }
 
-    .note-strip p {
-      margin: 0;
-      color: #64748b;
-      font-size: 0.75rem;
-      line-height: 1.4;
-      max-width: 70ch;
-    }
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 3px;
+        }
 
-    .note-actions {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
+        .btn-card-action {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.75rem;
+            border: none;
+            background: #f8fafc;
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.2s;
+        }
 
-    .ghost-btn {
-      text-decoration: none;
-      border-radius: 0.62rem;
-      border: 1px solid #d7e2f8;
-      background: #ffffff;
-      color: #1e40af;
-      font-size: 0.72rem;
-      font-weight: 800;
-      padding: 0.46rem 0.62rem;
-    }
+        .btn-card-action:hover {
+            background: #f1f5f9;
+        }
 
-    .empty-card {
-      padding: 1rem;
-      text-align: center;
-    }
+        /* Sidebar Widgets */
+        .side-widgets {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
 
-    .empty-card h2 {
-      margin: 0;
-      color: #0f2f74;
-      font-size: 1.15rem;
-      font-weight: 800;
-    }
+        .widget-pulse {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            border-radius: 1.5rem;
+            padding: 1.75rem;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
 
-    .empty-card p {
-      margin: 0.45rem auto 0;
-      max-width: 55ch;
-      color: #64748b;
-      font-size: 0.8rem;
-      line-height: 1.5;
-    }
+        .pulse-header h2 {
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
 
-    .empty-actions {
-      margin-top: 0.8rem;
-      display: inline-flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+        .pulse-item {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
 
-    @media (max-width: 1180px) {
-      .competitor-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
+        .pulse-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    @media (max-width: 980px) {
-      .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
+        .pulse-info small {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
 
-      .lead-card {
-        grid-template-columns: 1fr;
-      }
-    }
+        .pulse-info p {
+            font-size: 1rem;
+            font-weight: 800;
+        }
 
-    @media (max-width: 760px) {
-      .competitor-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+        .btn-pulse {
+            background: white;
+            color: #1e1b4b;
+            padding: 0.85rem;
+            border-radius: 0.75rem;
+            border: none;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* Bottom Note */
+        .bottom-section {
+            margin-top: 2rem;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 1.25rem;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .transparency-note {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            max-width: 600px;
+        }
+
+        .info-circle {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: #f1f5f9;
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: 800;
+        }
+
+        .note-text h4 {
+            font-size: 0.95rem;
+            font-weight: 800;
+            margin-bottom: 0.15rem;
+        }
+
+        .note-text p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .bottom-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .link-download {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .btn-compare {
+            background: #1e1b4b;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 0.75rem;
+            border: none;
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content { margin-left: 0; }
+            .content-grid { grid-template-columns: 1fr; }
+            .side-widgets { display: none; }
+        }
+    </style>
 </head>
-<body class="font-inter">
+<body>
 
-<jsp:include page="/layout/header.jsp" />
-
-<main class="candidate-shell">
-  <div class="dashboard-grid">
     <c:set var="activeCandidateNav" value="competing" />
     <jsp:include page="/layout/candidate-sidebar.jsp" />
 
-    <section class="content-col">
-      <c:if test="${not empty error}">
-        <div class="alert-strip alert-error"><c:out value="${error}" /></div>
-      </c:if>
-
-      <div class="hero-head panel">
-        <div class="hero-title-wrap">
-          <h1>Constituency Competitors</h1>
-          <p>
-            <c:out value="${constituency != null ? constituency.name : 'Constituency Not Assigned'}" />
-            <span> - </span>
-            <strong><c:out value="${fn:length(competingCandidates)}" /> Registered Candidates</strong>
-          </p>
-        </div>
-        <div class="hero-actions">
-          <a class="filter-chip" href="#">Filter by Party</a>
-          <a class="filter-chip" href="#">Sort by Popularity</a>
-        </div>
-      </div>
-
-      <c:choose>
-        <c:when test="${candidate == null}">
-          <article class="panel empty-card">
-            <h2>No active candidate profile found</h2>
-            <p>
-              You need an approved nomination before the competitors list can be generated.
-              Complete your application and return to this screen.
-            </p>
-            <div class="empty-actions">
-              <a class="ghost-btn" href="${pageContext.request.contextPath}/candidate/application">Complete Application</a>
-              <a class="ghost-btn" href="${pageContext.request.contextPath}/candidate/dashboard">Back to Dashboard</a>
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="search-container">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" id="competitorSearch" placeholder="Search competitors by name or party...">
             </div>
-          </article>
-        </c:when>
-        <c:when test="${empty competingCandidates}">
-          <article class="panel empty-card">
-            <h2>No competitors available yet</h2>
-            <p>
-              There are currently no other approved candidates in your constituency for
-              <c:out value="${election != null ? election.name : 'the selected election'}" />.
-            </p>
-            <div class="empty-actions">
-              <a class="ghost-btn" href="${pageContext.request.contextPath}/candidate/dashboard">Back to Dashboard</a>
-            </div>
-          </article>
-        </c:when>
-        <c:otherwise>
-          <c:set var="topCompetitor" value="${competingCandidates[0]}" />
-          <c:set var="topVotes" value="${topCompetitor.totalVotes != null ? topCompetitor.totalVotes : 0}" />
-
-          <article class="panel lead-card">
-            <div class="lead-photo">
-              <c:out value="${not empty topCompetitor.user.fullName ? fn:substring(topCompetitor.user.fullName, 0, 1) : 'C'}" />
-            </div>
-
-            <div class="lead-meta">
-              <small>Leading Competitor</small>
-              <h2><c:out value="${not empty topCompetitor.user.fullName ? topCompetitor.user.fullName : 'Unnamed Candidate'}" /></h2>
-              <p class="lead-party">
-                <c:out value="${not empty topCompetitor.partyName ? topCompetitor.partyName : 'Independent Candidate'}" />
-                <span> | </span>
-                <c:out value="${topCompetitor.partyType != null ? topCompetitor.partyType : 'INDEPENDENT'}" />
-              </p>
-              <p class="lead-summary">
-                Candidate is currently leading by total constituency votes. Compare manifesto themes,
-                local outreach, and issue priorities to sharpen campaign strategy.
-              </p>
-              <div class="lead-footer">
-                <span class="party-pill">Votes: <c:out value="${topVotes}" /></span>
-                <a class="link-btn" href="#">View Profile</a>
-              </div>
-            </div>
-          </article>
-
-          <div class="content-shell">
-            <div class="competitor-grid">
-              <c:forEach var="rival" items="${competingCandidates}" varStatus="status">
-                <c:set var="rivalVotes" value="${rival.totalVotes != null ? rival.totalVotes : 0}" />
-                <c:set var="reachPct" value="${topVotes > 0 ? (rivalVotes * 100) / topVotes : 0}" />
-
-                <c:if test="${status.index > 0}">
-                  <article class="mini-card">
-                    <div class="mini-top">
-                      <div class="avatar">
-                        <c:out value="${not empty rival.user.fullName ? fn:substring(rival.user.fullName, 0, 1) : 'C'}" />
-                      </div>
-                      <div class="mini-party">
-                        <c:out value="${not empty rival.partyName ? rival.partyName : 'Independent'}" />
-                      </div>
+            <div class="top-bar-right">
+                <div class="user-profile">
+                    <div style="text-align: right;">
+                        <h4 style="font-size: 0.9rem; font-weight: 800;"><c:out value="${sessionScope.user.fullName}" /></h4>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary);">#<c:out value="${sessionScope.user.id}" /></p>
                     </div>
-
-                    <h3><c:out value="${not empty rival.user.fullName ? rival.user.fullName : 'Unnamed Candidate'}" /></h3>
-                    <p class="mini-sub">
-                      <c:out value="${not empty rival.symbol ? rival.symbol : 'Campaign symbol pending'}" />
-                    </p>
-
-                    <div class="metric-label">Estimated Reach</div>
-                    <div class="metric-value"><c:out value="${reachPct}" />%</div>
-                    <div class="meter" style="--meter-width:${reachPct}%">
-                      <span></span>
+                    <div class="user-avatar">
+                        <img src="https://ui-avatars.com/api/?name=${fn:replace(sessionScope.user.fullName, ' ', '+')}&background=0f172a&color=fff" alt="Avatar" style="width:100%; height:100%; object-fit:cover;">
                     </div>
+                </div>
+            </div>
+        </header>
 
-                    <button type="button" class="mini-actions">View Profile</button>
-                  </article>
+        <section class="page-header">
+            <div class="header-title">
+                <h1>Constituency Competitors</h1>
+                <p><c:out value="${constituency.name}" /> Constituency • <span><c:out value="${fn:length(competingCandidates)}" /> Registered Candidates</span></p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-filter" onclick="filterByParty()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"></path></svg>
+                    Filter by Party
+                </button>
+                <button class="btn-filter" onclick="sortByPopularity()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 18h18M3 12h18M3 6h18"></path></svg>
+                    Sort by Popularity
+                </button>
+            </div>
+        </section>
+
+        <div class="content-grid">
+            <div class="competitors-list">
+                <%-- Featured Card (Top Opponent) --%>
+                <c:if test="${not empty competingCandidates}">
+                    <c:set var="topOpponent" value="${null}" />
+                    <c:forEach var="c" items="${competingCandidates}">
+                        <c:if test="${c.user.id != sessionScope.user.id}">
+                            <c:if test="${empty topOpponent || c.totalVotes > topOpponent.totalVotes}">
+                                <c:set var="topOpponent" value="${c}" />
+                            </c:if>
+                        </c:if>
+                    </c:forEach>
+
+                    <c:if test="${not empty topOpponent}">
+                        <div class="featured-card">
+                            <div class="candidate-img-container">
+                                <img src="https://ui-avatars.com/api/?name=${fn:replace(topOpponent.user.fullName, ' ', '+')}&background=1e1b4b&color=fff&size=240" alt="Top Opponent" style="width:100%; height:100%; object-fit:cover; opacity: 0.8;">
+                            </div>
+                            <div class="candidate-info">
+                                <div class="badge-leading">Leading Opponent</div>
+                                <div class="party-tag"><c:out value="${topOpponent.partyName}" /> • <c:out value="${topOpponent.partyType}" /> Party</div>
+                                <h2 class="candidate-name"><c:out value="${topOpponent.user.fullName}" /></h2>
+                                <p class="candidate-bio">
+                                    <c:choose>
+                                        <c:when test="${not empty topOpponent.manifesto}">
+                                            ${fn:substring(topOpponent.manifesto, 0, 180)}${fn:length(topOpponent.manifesto) > 180 ? '...' : ''}
+                                        </c:when>
+                                        <c:otherwise>
+                                            Official candidate representing the <c:out value="${topOpponent.partyName}" /> in the <c:out value="${constituency.name}" /> constituency. Focused on sustainable development and urban growth.
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
+                                <div class="featured-actions">
+                                    <div class="party-alpha">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="M12 8l4 4-4 4M8 12h8"></path></svg>
+                                        Party <c:out value="${topOpponent.symbol}" />
+                                    </div>
+                                    <a href="${pageContext.request.contextPath}/candidate/profile" class="view-profile-link">View Profile →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </c:if>
                 </c:if>
 
-                <c:if test="${status.index == 1}">
-                  <aside class="insight-card">
-                    <h3>Constituency Pulse</h3>
-                    <div class="insight-stat">
-                      <span>Voter Turnout Trend</span>
-                      <strong>+12%</strong>
-                    </div>
-                    <div class="insight-stat">
-                      <span>Key Local Issue</span>
-                      <strong>Public Safety</strong>
-                    </div>
-                    <button type="button" class="insight-btn">Full Analytics</button>
-                  </aside>
-                </c:if>
-              </c:forEach>
+                <%-- Other Competitors Grid --%>
+                <div class="cards-grid" id="competitorGrid">
+                    <c:forEach var="comp" items="${competingCandidates}">
+                        <%-- Skip the logged-in user if they are in the list --%>
+                        <c:if test="${comp.user.id != sessionScope.user.id}">
+                            <div class="competitor-card" data-name="${comp.user.fullName}" data-party="${comp.partyName}" data-votes="${comp.totalVotes}">
+                                <div class="card-header">
+                                    <div class="mini-avatar">
+                                        <img src="https://ui-avatars.com/api/?name=${fn:replace(comp.user.fullName, ' ', '+')}&background=1e1b4b&color=fff&size=100" alt="Avatar" style="width:100%; height:100%; object-fit:cover;">
+                                    </div>
+                                    <div class="party-logo">
+                                        <c:choose>
+                                            <c:when test="${comp.partyType == 'INDEPENDENT'}">
+                                                <span style="font-size: 1.5rem;">⚖️</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span style="font-size: 1.5rem;">🏛️</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <span><c:out value="${comp.partyName}" /></span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <h3><c:out value="${comp.user.fullName}" /></h3>
+                                    <p>
+                                        <c:choose>
+                                            <c:when test="${not empty comp.manifesto}">
+                                                ${fn:substring(comp.manifesto, 0, 80)}${fn:length(comp.manifesto) > 80 ? '...' : ''}
+                                            </c:when>
+                                            <c:otherwise>
+                                                Candidate representing <c:out value="${comp.partyName}" /> in the current election cycle.
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
+                                </div>
+                                <div class="reach-section">
+                                    <c:set var="reach" value="${totalConstituencyVotes > 0 ? (comp.totalVotes * 100 / totalConstituencyVotes) : 0}" />
+                                    <div class="reach-label">
+                                        <span>Estimated Reach</span>
+                                        <span><fmt:formatNumber value="${reach}" maxFractionDigits="1" />%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${reach > 0 ? reach : 5}%"></div>
+                                    </div>
+                                </div>
+                                <button class="btn-card-action" onclick="location.href='${pageContext.request.contextPath}/candidate/profile'">View Profile</button>
+                            </div>
+                        </c:if>
+                    </c:forEach>
+                    
+                    <%-- Placeholder if no other competitors --%>
+                    <c:if test="${fn:length(competingCandidates) <= 1}">
+                        <div style="grid-column: span 2; padding: 3rem; text-align: center; background: white; border-radius: 1.5rem; border: 1px dashed var(--border);">
+                            <p style="color: var(--text-secondary); font-weight: 600;">No other registered competitors in this constituency yet.</p>
+                        </div>
+                    </c:if>
+                </div>
             </div>
 
-            <div class="note-strip">
-              <p>
-                Transparency note: Candidate metrics are based on approved profiles and current vote statistics
-                available for <c:out value="${constituency != null ? constituency.name : 'your constituency'}" />.
-              </p>
-              <div class="note-actions">
-                <a class="ghost-btn" href="#">Download Report</a>
-                <a class="ghost-btn" href="#">Compare Metrics</a>
-              </div>
+            <%-- Right Sidebar Widgets --%>
+            <aside class="side-widgets">
+                <div class="widget-pulse">
+                    <div class="pulse-header">
+                        <h2>Constituency Pulse</h2>
+                    </div>
+                    <div class="pulse-item">
+                        <div class="pulse-icon">📈</div>
+                        <div class="pulse-info">
+                            <small>Voter Turnout Trend</small>
+                            <p>+12% increase</p>
+                        </div>
+                    </div>
+                    <div class="pulse-item">
+                        <div class="pulse-icon">🛡️</div>
+                        <div class="pulse-info">
+                            <small>Key Issue</small>
+                            <p>Public Safety</p>
+                        </div>
+                    </div>
+                    <button class="btn-pulse" onclick="location.href='${pageContext.request.contextPath}/candidate/dashboard'">Full Analytics</button>
+                </div>
+
+                <div style="background: white; border: 1px solid var(--border); border-radius: 1.5rem; padding: 1.5rem; text-align: center;">
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 700; margin-bottom: 1rem; text-transform: uppercase;">Voter Awareness</p>
+                    <div style="font-size: 2.5rem; font-weight: 800; color: var(--accent);"><c:out value="${votePercentage}" />%</div>
+                    <p style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">Constituency Reach</p>
+                </div>
+            </aside>
+        </div>
+
+        <footer class="bottom-section">
+            <div class="transparency-note">
+                <div class="info-circle">i</div>
+                <div class="note-text">
+                    <h4>Transparency Note</h4>
+                    <p>Candidate profiles and estimated reaches are based on publicly filed affidavits and recent survey data.</p>
+                </div>
             </div>
-          </div>
-        </c:otherwise>
-      </c:choose>
-    </section>
-  </div>
-</main>
+            <div class="bottom-actions">
+                <a href="#" class="link-download" onclick="window.print(); return false;">Download Report</a>
+                <button class="btn-compare" onclick="alert('Metric comparison feature coming soon!')">Compare Metrics</button>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Search Functionality
+        document.getElementById('competitorSearch').addEventListener('input', function(e) {
+            const term = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.competitor-card');
+            
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name').toLowerCase();
+                const party = card.getAttribute('data-party').toLowerCase();
+                if (name.includes(term) || party.includes(term)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Filter by Party (Toggle Unique Parties)
+        function filterByParty() {
+            const party = prompt("Enter party name to filter (leave empty to show all):");
+            const cards = document.querySelectorAll('.competitor-card');
+            
+            cards.forEach(card => {
+                if (!party || card.getAttribute('data-party').toLowerCase().includes(party.toLowerCase())) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Sort by Popularity (Votes)
+        let sortAsc = false;
+        function sortByPopularity() {
+            const grid = document.getElementById('competitorGrid');
+            const cards = Array.from(grid.querySelectorAll('.competitor-card'));
+            
+            cards.sort((a, b) => {
+                const votesA = parseInt(a.getAttribute('data-votes'));
+                const votesB = parseInt(b.getAttribute('data-votes'));
+                return sortAsc ? votesA - votesB : votesB - votesA;
+            });
+            
+            sortAsc = !sortAsc;
+            cards.forEach(card => grid.appendChild(card));
+        }
+    </script>
 
 </body>
 </html>
