@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * Represents a geographical Constituency for an election.
+ */
 @Entity
 @Table(name = "constituencies")
 public class Constituency implements Serializable {
@@ -35,9 +38,19 @@ public class Constituency implements Serializable {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    /**
+     * Default constructor for Constituency.
+     */
     public Constituency() {
     }
 
+    /**
+     * Constructs a new Constituency with the specified name, district, and province.
+     *
+     * @param name     the name of the constituency
+     * @param district the district the constituency belongs to
+     * @param province the province the constituency belongs to
+     */
     public Constituency(String name, String district, String province) {
         this.name = name;
         this.district = district;

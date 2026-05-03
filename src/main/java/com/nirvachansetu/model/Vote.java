@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * Represents a single Vote cast by a specific voter in an election.
+ */
 @Entity
 @Table(name = "votes", uniqueConstraints = {
         @UniqueConstraint(name = "unique_vote", columnNames = {"election_id", "voter_id"})

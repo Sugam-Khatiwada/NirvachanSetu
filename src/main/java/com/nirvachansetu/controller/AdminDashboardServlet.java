@@ -28,6 +28,15 @@ public class AdminDashboardServlet extends HttpServlet {
     private CandidateService candidateService = new CandidateService();
     private VoteService voteService = new VoteService();
 
+    /**
+     * Handles GET requests to display the admin dashboard.
+     * Loads statistics such as total users, active elections, and pending approvals.
+     * 
+     * @param request  the HTTP servlet request
+     * @param response the HTTP servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

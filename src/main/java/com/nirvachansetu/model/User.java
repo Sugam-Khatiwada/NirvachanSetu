@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * Represents a User entity in the NirvachanSetu system.
+ * Handles user details, roles, and status for authentication and operations.
+ */
 @Entity
 @Table(name = "users")
 public class User implements Serializable {

@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents an Election event containing details about start/end dates and status.
+ */
 @Entity
 @Table(name = "elections")
 public class Election implements Serializable {

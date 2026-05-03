@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * Represents an approved Candidate participating in an election.
+ */
 @Entity
 @Table(name = "candidates")
 public class Candidate implements Serializable {
@@ -60,9 +63,20 @@ public class Candidate implements Serializable {
         ACTIVE, DISQUALIFIED, WITHDRAWN
     }
 
+    /**
+     * Default no-argument constructor required by JPA.
+     */
     public Candidate() {
     }
 
+    /**
+     * Parameterized constructor to initialize a Candidate.
+     * 
+     * @param user         the user who is the candidate
+     * @param application  the approved candidate application
+     * @param election     the election the candidate is participating in
+     * @param constituency the constituency the candidate belongs to
+     */
     public Candidate(User user, CandidateApplication application, Election election, Constituency constituency) {
         this.user = user;
         this.application = application;
@@ -70,12 +84,18 @@ public class Candidate implements Serializable {
         this.constituency = constituency;
     }
 
+    /**
+     * Called before persisting the entity. Initializes the creation and update timestamps.
+     */
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
+    /**
+     * Called before updating the entity. Updates the update timestamp.
+     */
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();

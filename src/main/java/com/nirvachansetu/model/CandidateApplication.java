@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Represents a Candidate's application for a specific election.
+ */
 @Entity
 @Table(name = "candidate_applications", uniqueConstraints = {
         @UniqueConstraint(name = "unique_application", columnNames = {"user_id", "election_id"})

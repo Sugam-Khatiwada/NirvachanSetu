@@ -21,6 +21,14 @@ public class AdminUserServlet extends HttpServlet {
 
     private UserService userService = new UserService();
 
+    /**
+     * Handles GET requests to display the list of all users.
+     *
+     * @param request  the HTTP request object
+     * @param response the HTTP response object
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -36,6 +44,14 @@ public class AdminUserServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Handles POST requests for user-related actions (approve, reject, suspend).
+     *
+     * @param request  the HTTP request object
+     * @param response the HTTP response object
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
