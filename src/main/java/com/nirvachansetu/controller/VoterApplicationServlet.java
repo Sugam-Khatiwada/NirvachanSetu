@@ -1,5 +1,10 @@
 package com.nirvachansetu.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.nirvachansetu.dao.ConstituencyDAO;
 import com.nirvachansetu.model.CandidateApplication;
 import com.nirvachansetu.model.Constituency;
 import com.nirvachansetu.model.Election;
@@ -7,11 +12,7 @@ import com.nirvachansetu.model.User;
 import com.nirvachansetu.service.CandidateService;
 import com.nirvachansetu.service.ElectionService;
 import com.nirvachansetu.service.UserService;
-import com.nirvachansetu.dao.ConstituencyDAO;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -81,11 +82,11 @@ public class VoterApplicationServlet extends HttpServlet {
             request.setAttribute("activeApplications", activeApplications);
             request.setAttribute("user", user);
 
-            request.getRequestDispatcher("/voter/apply-candidancy.jsp").forward(request, response);
+            request.getRequestDispatcher("/voter/apply-candidacy.jsp").forward(request, response);
 
         } catch (Exception e) {
             request.setAttribute("error", "Error loading application form: " + e.getMessage());
-            request.getRequestDispatcher("/voter/apply-candidancy.jsp").forward(request, response);
+            request.getRequestDispatcher("/voter/apply-candidacy.jsp").forward(request, response);
         }
     }
 

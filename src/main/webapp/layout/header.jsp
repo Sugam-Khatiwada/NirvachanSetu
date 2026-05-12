@@ -27,6 +27,7 @@
                         <a href="${pageContext.request.contextPath}/voter/candidates" class="text-sm font-medium hover:text-blue-700 transition-colors ${requestScope.activePage == 'candidates' ? 'text-gray-700 font-semibold pb-1 border-b-2 border-blue-700' : 'text-gray-600'}">Candidates</a>
                         <a href="${pageContext.request.contextPath}/voter/cast-vote" class="text-sm font-medium hover:text-blue-700 transition-colors ${requestScope.activePage == 'vote' ? 'text-gray-700 font-semibold pb-1 border-b-2 border-blue-700' : 'text-gray-600'}">Vote</a>
                         <a href="${pageContext.request.contextPath}/voter/results" class="text-sm font-medium hover:text-blue-700 transition-colors ${requestScope.activePage == 'results' ? 'text-gray-700 font-semibold pb-1 border-b-2 border-blue-700' : 'text-gray-600'}">Results</a>
+                        <a href="${pageContext.request.contextPath}/voter/apply-candidacy" class="text-sm font-medium hover:text-blue-700 transition-colors ${requestScope.activePage == 'apply-candidacy' ? 'text-gray-700 font-semibold pb-1 border-b-2 border-blue-700' : 'text-gray-600'}">Apply Candidacy</a>
                     </c:otherwise>
                 </c:choose>
             </div>
