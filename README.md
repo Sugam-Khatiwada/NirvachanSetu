@@ -38,6 +38,11 @@ NirvachanSetu is a comprehensive web-based Election Management System built with
 2. **Authentication (`/auth/`):**
    - **Register (`register.jsp`):** New users can create an account. By default, users register as "Voters".
    - **Login (`login.jsp`):** Enter your credentials. The system will automatically route you to the correct dashboard based on your assigned role.
+   
+   **Mock Login Credentials (from `Database.sql`):**
+   - **Admin:** Email: `admin@nirvachansetu.com` | Password: `admin123`
+   - **Voter:** Email: `rajesh@email.com` | Password: `password123`
+   - **Candidate:** Email: `anjali@email.com` | Password: `password123`
 
 3. **Voter Operations (`/voter/`):**
    - **Dashboard:** View upcoming and active elections.
