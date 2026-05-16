@@ -182,6 +182,17 @@ public class Election implements Serializable {
     }
 
     /**
+     * Returns startDate as a plain ISO date string (yyyy-MM-dd) for use in
+     * JavaScript countdown timers via data attributes.
+     */
+    public String getStartDateISO() {
+        if (startDate != null) {
+            return startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
+        return "";
+    }
+
+    /**
      * Returns startDate formatted for HTML datetime-local input (yyyy-MM-dd'T'HH:mm).
      */
     public String getStartDateForInput() {

@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Candidate Portal - NirvachanSetu</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --sidebar-bg: #1e1b4b; /* Dark Navy from mockup */
@@ -50,106 +51,6 @@
             max-width: 1600px;
         }
 
-        /* Top Bar Styling */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 0.5rem;
-        }
-
-        .search-container {
-            position: relative;
-            width: 420px;
-        }
-
-        .search-container input {
-            width: 100%;
-            padding: 0.8rem 1.25rem 0.8rem 3rem;
-            border-radius: 2rem;
-            border: 1px solid var(--border);
-            background-color: #f1f5f9;
-            outline: none;
-            font-size: 0.9rem;
-            color: var(--text-primary);
-            transition: all 0.2s;
-        }
-
-        .search-container input:focus {
-            background-color: white;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-        }
-
-        .search-container svg {
-            position: absolute;
-            left: 1.1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 1.15rem;
-            height: 1.15rem;
-            color: var(--text-secondary);
-        }
-
-        .top-bar-right {
-            display: flex;
-            align-items: center;
-            gap: 1.25rem;
-        }
-
-        .icon-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--text-secondary);
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-
-        .icon-btn:hover {
-            background-color: #f1f5f9;
-            color: var(--text-primary);
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            margin-left: 0.5rem;
-            padding-left: 1.25rem;
-            border-left: 1.5px solid var(--border);
-        }
-
-        .user-info {
-            text-align: right;
-        }
-
-        .user-info h4 {
-            font-size: 0.9rem;
-            font-weight: 800;
-            color: var(--text-primary);
-        }
-
-        .user-info p {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        .user-avatar {
-            width: 2.75rem;
-            height: 2.75rem;
-            border-radius: 50%;
-            background-color: #f1f5f9;
-            border: 2px solid white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
 
         /* Dashboard Content Layout */
         .dash-row-top {
@@ -305,12 +206,13 @@
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            background: conic-gradient(var(--primary) ${votePercentage > 0 ? votePercentage : 42}%, #f1f5f9 0%);
+            background: conic-gradient(var(--primary) var(--ring-pct, 42%), #f1f5f9 0%);
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 1.75rem;
             position: relative;
+            transition: background 0.6s ease;
         }
 
         .progress-circle::after {
@@ -620,32 +522,7 @@
 
     <!-- MAIN CONTENT -->
     <main class="main-content">
-        <!-- Top Bar -->
-        <header class="top-bar">
-            <div class="search-container">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" placeholder="Search analytics, voters, or news...">
-            </div>
-
-            <div class="top-bar-right">
-                <button class="icon-btn" title="Notifications">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                </button>
-                <button class="icon-btn" title="Settings">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                </button>
-
-                <div class="user-profile">
-                    <div class="user-info">
-                        <h4><c:out value="${sessionScope.user.fullName}" /></h4>
-                        <p>Candidate ID: #<c:out value="${sessionScope.user.id != null ? sessionScope.user.id : 'R9321'}" /></p>
-                    </div>
-                    <div class="user-avatar">
-                        <img src="https://ui-avatars.com/api/?name=${fn:replace(sessionScope.user.fullName, ' ', '+')}&background=0f172a&color=fff" alt="Avatar" style="width:100%; height:100%; object-fit:cover;">
-                    </div>
-                </div>
-            </div>
-        </header>
+        <jsp:include page="/layout/header.jsp" />
 
         <!-- Alerts -->
         <c:if test="${not empty sessionScope.error}">
@@ -684,16 +561,20 @@
             </article>
 
             <!-- Election Countdown -->
-            <article class="countdown-card">
+            <article class="countdown-card"
+                id="countdownCard"
+                data-election-date="${upcomingElection != null ? upcomingElection.startDateISO : ''}"
+                data-election-name="${upcomingElection != null ? upcomingElection.name : ''}"
+                data-election-display="${upcomingElection != null ? upcomingElection.startDateFull : ''}">
                 <h3>Election Countdown</h3>
-                <div class="progress-circle">
+                <div class="progress-circle" id="countdownRing">
                     <div class="progress-content">
-                        <span><c:out value="${votePercentage > 0 ? votePercentage : 42}" /></span>
-                        <label>Days Left</label>
+                        <span id="countdownDays">--</span>
+                        <label id="countdownLabel">Days Left</label>
                     </div>
                 </div>
-                <div class="election-date"><c:out value="${election != null ? election.startDateFull : 'May 15, 2024'}" /></div>
-                <div class="election-phase"><c:out value="${election != null ? election.name : 'Phase 3 Voting Window'}" /></div>
+                <div class="election-date" id="countdownDate">Loading...</div>
+                <div class="election-phase" id="countdownPhase">Calculating...</div>
             </article>
         </div>
 
@@ -821,7 +702,79 @@
                 </div>
             </section>
         </div>
+
+        <jsp:include page="/layout/footer.jsp" />
     </main>
+
+<script>
+(function () {
+    var card       = document.getElementById('countdownCard');
+    var daysEl     = document.getElementById('countdownDays');
+    var labelEl    = document.getElementById('countdownLabel');
+    var dateEl     = document.getElementById('countdownDate');
+    var phaseEl    = document.getElementById('countdownPhase');
+    var ringEl     = document.getElementById('countdownRing');
+
+    if (!card) return;
+
+    var isoDate     = card.getAttribute('data-election-date');   // e.g. "2026-08-15"
+    var phaseName   = card.getAttribute('data-election-name')  || 'Upcoming Election';
+    var displayDate = card.getAttribute('data-election-display') || '';
+
+    // If the servlet didn't provide startDateISO, try to parse startDateFull as fallback
+    if (!isoDate && displayDate) {
+        var parsed = new Date(displayDate);
+        if (!isNaN(parsed)) isoDate = parsed.toISOString().split('T')[0];
+    }
+
+    if (!isoDate) {
+        daysEl.textContent   = 'N/A';
+        labelEl.textContent  = '';
+        dateEl.textContent   = 'No upcoming election';
+        phaseEl.textContent  = 'Check back later';
+        ringEl.style.setProperty('--ring-pct', '0%');
+        return;
+    }
+
+    // Parse the election date at midnight local time
+    var parts       = isoDate.split('-');
+    var electionDay = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+
+    // Pretty-print the date
+    var opts = { year: 'numeric', month: 'long', day: 'numeric' };
+    dateEl.textContent  = electionDay.toLocaleDateString(undefined, opts);
+    phaseEl.textContent = phaseName;
+
+    function update() {
+        var now      = new Date();
+        var todayMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        var diffMs   = electionDay - todayMid;
+        var daysLeft = Math.ceil(diffMs / 86400000);
+
+        if (daysLeft < 0) {
+            // Date has passed — treat as no upcoming election
+            daysEl.textContent  = 'N/A';
+            labelEl.textContent = '';
+            dateEl.textContent  = 'No upcoming election';
+            phaseEl.textContent = 'Check back later';
+            ringEl.style.setProperty('--ring-pct', '0%');
+        } else if (daysLeft === 0) {
+            daysEl.textContent  = 'TODAY';
+            labelEl.textContent = 'Election Day!';
+            ringEl.style.setProperty('--ring-pct', '100%');
+        } else {
+            daysEl.textContent  = daysLeft;
+            labelEl.textContent = 'Days Left';
+            // Ring fill: cap at 100 days for a full circle visual
+            var pct = Math.min(100, Math.max(1, Math.round((100 - daysLeft) / 100 * 100)));
+            ringEl.style.setProperty('--ring-pct', pct + '%');
+        }
+    }
+
+    update();
+    setInterval(update, 1000);
+})();
+</script>
 
 </body>
 </html>
