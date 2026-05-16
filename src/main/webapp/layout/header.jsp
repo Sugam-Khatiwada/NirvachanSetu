@@ -50,8 +50,15 @@
                 <!-- User Avatar & Dropdown -->
                 <c:if test="${not empty sessionScope.user}">
                     <div class="relative" id="userDropdown">
-                        <button onclick="toggleDropdown()" class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-700 text-white text-sm font-bold hover:bg-gray-800 transition-colors">
-                            ${fn:substring(sessionScope.user.fullName, 0, 1)}
+                        <button onclick="toggleDropdown()" class="flex items-center justify-center w-9 h-9 rounded-full bg-gray-700 text-white text-sm font-bold hover:bg-gray-800 transition-colors overflow-hidden">
+                            <c:choose>
+                                <c:when test="${not empty sessionScope.user.profileImage}">
+                                    <img src="${pageContext.request.contextPath}/${sessionScope.user.profileImage}" alt="Avatar" class="w-full h-full object-cover">
+                                </c:when>
+                                <c:otherwise>
+                                    ${fn:substring(sessionScope.user.fullName, 0, 1)}
+                                </c:otherwise>
+                            </c:choose>
                         </button>
                         
                         <!-- Dropdown Menu -->

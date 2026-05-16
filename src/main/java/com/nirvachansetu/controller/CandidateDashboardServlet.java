@@ -14,6 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +100,17 @@ public class CandidateDashboardServlet extends HttpServlet {
             request.setAttribute("votePercentage", votePercentage);
             request.setAttribute("totalConstituencyVotes", totalConstituencyVotes);
 
+            // Find the nearest UPCOMING election for the countdown widget.
+            // Priority: REGISTRATION status first, then ACTIVE — both filtered to future start dates.
+            Election upcomingElection = findNearestUpcomingElection();
+            // Fallback: use the candidate's own election if it is still in the future
+            if (upcomingElection == null && election != null
+                    && election.getStartDate() != null
+                    && election.getStartDate().isAfter(LocalDateTime.now())) {
+                upcomingElection = election;
+            }
+            request.setAttribute("upcomingElection", upcomingElection);
+
             // Choose view based on path
             String path = request.getServletPath();
             if ("/candidate/competitors".equals(path) || "/candidate/competing".equals(path)) {
@@ -116,5 +129,27 @@ public class CandidateDashboardServlet extends HttpServlet {
                 request.getRequestDispatcher("/candidate/dashboard.jsp").forward(request, response);
             }
         }
+    }
+
+    /**
+     * Finds the nearest upcoming election (startDate > now) across REGISTRATION,
+     * ACTIVE, and DRAFT statuses, ordered by soonest start date.
+     */
+    private Election findNearestUpcomingElection() {
+        LocalDateTime now = LocalDateTime.now();
+        Election nearest = null;
+
+        for (String status : new String[]{"REGISTRATION", "ACTIVE", "DRAFT"}) {
+            List<Election> list = electionService.findByStatus(status);
+            if (list == null) continue;
+            for (Election e : list) {
+                if (e.getStartDate() == null) continue;
+                if (!e.getStartDate().isAfter(now)) continue; // skip past / current
+                if (nearest == null || e.getStartDate().isBefore(nearest.getStartDate())) {
+                    nearest = e;
+                }
+            }
+        }
+        return nearest;
     }
 }

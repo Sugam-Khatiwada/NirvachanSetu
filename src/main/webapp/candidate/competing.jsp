@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Constituency Competitors - NirvachanSetu</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --sidebar-bg: #1e1b4b;
@@ -50,61 +51,6 @@
             flex-direction: column;
             gap: 1.5rem;
             max-width: 1400px;
-        }
-
-        /* Top Bar */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 0.5rem;
-        }
-
-        .search-container {
-            position: relative;
-            width: 420px;
-        }
-
-        .search-container input {
-            width: 100%;
-            padding: 0.8rem 1.25rem 0.8rem 3rem;
-            border-radius: 2rem;
-            border: 1px solid var(--border);
-            background-color: #f1f5f9;
-            outline: none;
-            font-size: 0.9rem;
-        }
-
-        .search-container svg {
-            position: absolute;
-            left: 1.1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 1.15rem;
-            height: 1.15rem;
-            color: var(--text-secondary);
-        }
-
-        .top-bar-right {
-            display: flex;
-            align-items: center;
-            gap: 1.25rem;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 0.85rem;
-            padding-left: 1.25rem;
-            border-left: 1.5px solid var(--border);
-        }
-
-        .user-avatar {
-            width: 2.75rem;
-            height: 2.75rem;
-            border-radius: 50%;
-            background-color: #f1f5f9;
-            overflow: hidden;
         }
 
         /* Header Section */
@@ -516,23 +462,7 @@
     <jsp:include page="/layout/candidate-sidebar.jsp" />
 
     <main class="main-content">
-        <header class="top-bar">
-            <div class="search-container">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" id="competitorSearch" placeholder="Search competitors by name or party...">
-            </div>
-            <div class="top-bar-right">
-                <div class="user-profile">
-                    <div style="text-align: right;">
-                        <h4 style="font-size: 0.9rem; font-weight: 800;"><c:out value="${sessionScope.user.fullName}" /></h4>
-                        <p style="font-size: 0.75rem; color: var(--text-secondary);">#<c:out value="${sessionScope.user.id}" /></p>
-                    </div>
-                    <div class="user-avatar">
-                        <img src="https://ui-avatars.com/api/?name=${fn:replace(sessionScope.user.fullName, ' ', '+')}&background=0f172a&color=fff" alt="Avatar" style="width:100%; height:100%; object-fit:cover;">
-                    </div>
-                </div>
-            </div>
-        </header>
+        <jsp:include page="/layout/header.jsp" />
 
         <section class="page-header">
             <div class="header-title">
@@ -698,6 +628,8 @@
                 <button class="btn-compare" onclick="alert('Metric comparison feature coming soon!')">Compare Metrics</button>
             </div>
         </footer>
+
+        <jsp:include page="/layout/footer.jsp" />
     </main>
 
     <script>

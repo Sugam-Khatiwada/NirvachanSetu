@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile & Manifesto - NirvachanSetu</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --primary: #2563eb;
@@ -24,18 +25,6 @@
 
         .main-content { flex: 1; margin-left: 260px; padding: 0; display: flex; flex-direction: column; }
 
-        /* Top Header */
-        .header-nav { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2.5rem; background: white; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
-        .nav-left { display: flex; align-items: center; gap: 2rem; }
-        .brand { font-weight: 800; color: var(--secondary); }
-        .sub-nav { display: flex; gap: 1.5rem; }
-        .sub-nav a { text-decoration: none; color: var(--text-secondary); font-size: 0.85rem; font-weight: 600; transition: color 0.2s; }
-        .sub-nav a.active { color: var(--primary); }
-
-        .nav-right { display: flex; align-items: center; gap: 1.5rem; }
-        .user-top { display: flex; align-items: center; gap: 0.75rem; text-align: right; }
-        .user-top h4 { font-size: 0.85rem; font-weight: 800; color: var(--secondary); }
-        .user-top span { font-size: 0.7rem; color: var(--text-secondary); font-weight: 600; text-transform: uppercase; }
 
         /* Hero Section */
         .hero-banner { height: 180px; background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); position: relative; margin-bottom: 4rem; }
@@ -121,35 +110,27 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <header class="header-nav">
-            <div class="nav-left">
-                <span class="brand">NirvachanSetu</span>
-                <nav class="sub-nav">
-                    <a href="#" class="active">Overview</a>
-                    <a href="#">Campaign</a>
-                    <a href="#">Analytics</a>
-                </nav>
-            </div>
-            <div class="nav-right">
-                <button class="icon-btn" style="background: none; border: none; cursor: pointer; color: var(--text-secondary);">
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                </button>
-                <div class="user-top">
-                    <div>
-                        <h4><c:out value="${user.fullName}" /></h4>
-                        <span>Candidate</span>
-                    </div>
-                    <img src="https://ui-avatars.com/api/?name=${fn:replace(user.fullName, ' ', '+')}&background=0f172a&color=fff" alt="Avatar" style="width: 2.5rem; height: 2.5rem; border-radius: 50%;">
-                </div>
-            </div>
-        </header>
+        <jsp:include page="/layout/header.jsp" />
 
         <div class="hero-banner"></div>
 
         <div class="profile-header-wrap">
             <div class="profile-pic-large">
-                <img src="https://ui-avatars.com/api/?name=${fn:replace(user.fullName, ' ', '+')}&background=random&size=200" alt="Profile">
-                <button class="pic-edit-btn">
+                <c:choose>
+                    <c:when test="${not empty user.profileImage}">
+                        <img src="${pageContext.request.contextPath}/${user.profileImage}" alt="Profile">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="https://ui-avatars.com/api/?name=${fn:replace(user.fullName, ' ', '+')}&background=random&size=200" alt="Profile">
+                    </c:otherwise>
+                </c:choose>
+                
+                <!-- Hidden Upload Form -->
+                <form id="profilePicForm" action="${pageContext.request.contextPath}/candidate/profile" method="POST" enctype="multipart/form-data" style="display: none;">
+                    <input type="file" id="profileImageInput" name="profileImage" accept="image/*" onchange="document.getElementById('profilePicForm').submit()">
+                </form>
+
+                <button class="pic-edit-btn" onclick="document.getElementById('profileImageInput').click()">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
                 </button>
             </div>
@@ -225,6 +206,8 @@
 
             <jsp:include page="manifesto-component.jsp" />
         </div>
+
+        <jsp:include page="/layout/footer.jsp" />
     </main>
 
     <!-- Modals -->
