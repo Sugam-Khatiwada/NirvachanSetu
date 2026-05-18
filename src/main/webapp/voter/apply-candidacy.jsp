@@ -23,6 +23,20 @@
                 </div>
                 <h1 style="font-size: 1.5rem; font-weight: 800; color: #1E3A8A; margin: 0;">NirvachanSetu</h1>
             </div>
+
+            <c:if test="${not empty success}">
+                <div style="flex-grow: 1; margin: 0 2rem; padding: 0.75rem 1.5rem; background-color: #DEF7EC; color: #03543F; border-radius: 0.75rem; border: 1px solid #BCF0DA; font-size: 0.875rem; font-weight: 600;">
+                    ${success}
+                </div>
+                <c:remove var="success" scope="session" />
+            </c:if>
+            <c:if test="${not empty error}">
+                <div style="flex-grow: 1; margin: 0 2rem; padding: 0.75rem 1.5rem; background-color: #FDE8E8; color: #9B1C1C; border-radius: 0.75rem; border: 1px solid #F8B4B4; font-size: 0.875rem; font-weight: 600;">
+                    ${error}
+                </div>
+                <c:remove var="error" scope="session" />
+            </c:if>
+
             <a href="${pageContext.request.contextPath}/voter/dashboard" style="display: flex; align-items: center; gap: 0.5rem; color: #475569; text-decoration: none; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">
                 <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -163,7 +177,8 @@
                                 <h4 style="font-size: 0.875rem; font-weight: 800; color: #1E293B; margin: 0 0 0.5rem 0;">ID Proof</h4>
                                 <p style="font-size: 0.65rem; color: #64748B; font-weight: 600; margin-bottom: 1.5rem;">Aadhaar, Voter ID, or Passport (PDF/JPG)</p>
                                 <button type="button" onclick="document.getElementById('idProof').click()" style="padding: 0.75rem 2rem; border-radius: 100px; border: 2px solid #1E293B; background: transparent; color: #1E293B; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; cursor: pointer;">Browse Files</button>
-                                <input type="file" id="idProof" name="idProof" style="display: none;">
+                                <input type="file" id="idProof" name="idProof" required style="display: none;" onchange="updateFileStatus(this, 'idStatus')">
+                                <p id="idStatus" style="font-size: 0.65rem; color: #1E3A8A; font-weight: 600; margin-top: 0.5rem;"></p>
                             </div>
 
                             <div style="background-color: #F8FAFC; border: 2px dashed #E2E8F0; border-radius: 2rem; padding: 3rem; display: flex; flex-direction: column; align-items: center; text-align: center;">
@@ -175,7 +190,8 @@
                                 <h4 style="font-size: 0.875rem; font-weight: 800; color: #1E293B; margin: 0 0 0.5rem 0;">Nomination Paper</h4>
                                 <p style="font-size: 0.65rem; color: #64748B; font-weight: 600; margin-bottom: 1.5rem;">Signed Form 2A / 2B (PDF)</p>
                                 <button type="button" onclick="document.getElementById('nomination_paper').click()" style="padding: 0.75rem 2rem; border-radius: 100px; border: 2px solid #1E293B; background: transparent; color: #1E293B; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; cursor: pointer;">Browse Files</button>
-                                <input type="file" id="nomination_paper" name="nominationPaper" style="display: none;">
+                                <input type="file" id="nomination_paper" name="nominationPaper" required style="display: none;" onchange="updateFileStatus(this, 'nominationStatus')">
+                                <p id="nominationStatus" style="font-size: 0.65rem; color: #1E3A8A; font-weight: 600; margin-top: 0.5rem;"></p>
                             </div>
                         </div>
                     </div>
@@ -198,7 +214,7 @@
                             </p>
                         </div>
 
-                        <button type="submit" style="width: 100%; padding: 1.5rem; background-color: #F1F5F9; border: 1px solid #E2E8F0; border-radius: 1.5rem; color: #94A3B8; font-size: 1.125rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 1rem; cursor: pointer;">
+                        <button type="submit" style="width: 100%; padding: 1.5rem; background-color: #1E3A8A; border: 1px solid #1E3A8A; border-radius: 1.5rem; color: white; font-size: 1.125rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 1rem; cursor: pointer; transition: background-color 0.2s;">
                             <svg style="width: 1.5rem; height: 1.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                             </svg>
@@ -222,6 +238,72 @@
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div id="nominationSuccessModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+        <div style="background: white; border-radius: 2rem; padding: 3rem; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
+            <div style="width: 5rem; height: 5rem; background: #DEF7EC; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                <svg style="width: 2.5rem; height: 2.5rem; color: #057A55;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h2 style="font-size: 1.5rem; font-weight: 800; color: #1E293B; margin-bottom: 0.5rem;">Nomination Submitted!</h2>
+            <p style="font-size: 0.875rem; color: #64748B; line-height: 1.6; margin-bottom: 2rem;">
+                Your candidacy request has been securely transmitted. You can track the status in your dashboard.
+            </p>
+            <button onclick="window.location.href='${pageContext.request.contextPath}/voter/dashboard'" style="width: 100%; padding: 1rem; background: #1E3A8A; color: white; border: none; border-radius: 1rem; font-weight: 800; cursor: pointer;">
+                Go to Dashboard
+            </button>
+        </div>
+    </div>
+
     <script src="${pageContext.request.contextPath}/js/app.js"></script>
+    <script>
+        function updateFileStatus(input, statusId) {
+            const statusElement = document.getElementById(statusId);
+            if (input.files && input.files.length > 0) {
+                statusElement.textContent = "Selected: " + input.files[0].name;
+            } else {
+                statusElement.textContent = "";
+            }
+        }
+
+        // Handle Form Submission with Animation
+        const form = document.querySelector('form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span style="display: flex; align-items: center; gap: 0.5rem;"><svg style="width: 1.25rem; height: 1.25rem; animation: spin 1s linear infinite;" fill="none" viewBox="0 0 24 24"><circle style="opacity: 0.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path style="opacity: 0.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Transmitting...</span>';
+
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    // Show success modal with tick
+                    document.getElementById('nominationSuccessModal').style.display = 'flex';
+                } else {
+                    alert('Submission failed. Please check your data.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }
+            } catch (error) {
+                alert('An error occurred during submission.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
+    </script>
+    <style>
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
 </body>
 </html>

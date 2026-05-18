@@ -1,8 +1,13 @@
 package com.nirvachansetu.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.nirvachansetu.dao.ConstituencyDAO;
 import com.nirvachansetu.model.CandidateApplication;
@@ -14,10 +19,12 @@ import com.nirvachansetu.service.ElectionService;
 import com.nirvachansetu.service.UserService;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 
 /**
  * VoterApplicationServlet allows a VOTER to apply for candidacy.
@@ -28,6 +35,11 @@ import jakarta.servlet.http.HttpServletResponse;
  * from the voter portal. Once approved, the user's role changes from VOTER to CANDIDATE.
  */
 @WebServlet("/voter/apply-candidacy")
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+    maxFileSize = 1024 * 1024 * 5,      // 5MB
+    maxRequestSize = 1024 * 1024 * 10    // 10MB
+)
 public class VoterApplicationServlet extends HttpServlet {
 
     private CandidateService candidateService = new CandidateService();
@@ -109,6 +121,17 @@ public class VoterApplicationServlet extends HttpServlet {
             String manifesto = request.getParameter("manifesto");
             String symbol = request.getParameter("symbol");
 
+            // Handle file uploads
+            String uploadPath = getServletContext().getRealPath("/") + "uploads" + File.separator + "applications";
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) uploadDir.mkdirs();
+
+            Part idProofPart = request.getPart("idProof");
+            String idProofFileName = saveFile(idProofPart, uploadPath);
+
+            Part nominationPart = request.getPart("nominationPaper");
+            String nominationFileName = saveFile(nominationPart, uploadPath);
+
             // Create the candidate application
             CandidateApplication application = new CandidateApplication();
 
@@ -116,8 +139,7 @@ public class VoterApplicationServlet extends HttpServlet {
             User user = userService.findById(sessionUser.getId());
             application.setUser(user);
 
-            Election election = new Election();
-            election.setId(Integer.parseInt(electionIdStr));
+            Election election = electionService.findById(Integer.parseInt(electionIdStr));
             application.setElection(election);
 
             Constituency constituency = new Constituency();
@@ -125,10 +147,22 @@ public class VoterApplicationServlet extends HttpServlet {
             application.setConstituency(constituency);
 
             application.setPartyName(partyName);
-            application.setPartyType(CandidateApplication.PartyType.valueOf(partyType));
+            // Default to INDEPENDENT if not specified
+            if (partyType != null && !partyType.isEmpty()) {
+                application.setPartyType(CandidateApplication.PartyType.valueOf(partyType));
+            } else {
+                application.setPartyType(CandidateApplication.PartyType.INDEPENDENT);
+            }
             application.setManifesto(manifesto);
             application.setSymbol(symbol);
             application.setStatus(CandidateApplication.ApplicationStatus.PENDING);
+            
+            if (idProofFileName != null) {
+                application.setIdProofPath("uploads/applications/" + idProofFileName);
+            }
+            if (nominationFileName != null) {
+                application.setDeclarationPath("uploads/applications/" + nominationFileName);
+            }
 
             // Save the application
             candidateService.applyForElection(application);
@@ -144,5 +178,25 @@ public class VoterApplicationServlet extends HttpServlet {
         }
 
         response.sendRedirect(request.getContextPath() + "/voter/apply-candidacy");
+    }
+
+    private String saveFile(Part part, String uploadPath) throws IOException {
+        if (part == null || part.getSize() == 0) return null;
+        
+        String originalFileName = part.getSubmittedFileName();
+        String extension = "";
+        int i = originalFileName.lastIndexOf('.');
+        if (i > 0) {
+            extension = originalFileName.substring(i);
+        }
+        
+        String fileName = UUID.randomUUID().toString() + extension;
+        File file = new File(uploadPath + File.separator + fileName);
+        
+        try (InputStream input = part.getInputStream()) {
+            Files.copy(input, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
+        
+        return fileName;
     }
 }
