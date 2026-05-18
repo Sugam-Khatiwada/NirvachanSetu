@@ -15,7 +15,7 @@
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
         .candidate-card { transition: all 0.2s ease; border: 2px solid transparent; }
         .candidate-card:hover { border-color: #e2e8f0; }
-        .candidate-card.selected { border-color: #1e3a8a; background-color: #f0fdf4; } /* or slightly tinted */
+        .candidate-card.selected { border-color: #1e3a8a; background-color: #eff6ff; }
         
         .radio-custom {
             appearance: none;
@@ -30,21 +30,25 @@
             display: grid;
             place-content: center;
             cursor: pointer;
+            transition: all 0.2s ease;
         }
-        .radio-custom::before {
-            content: "";
-            width: 0.75em;
-            height: 0.75em;
-            border-radius: 50%;
-            transform: scale(0);
-            transition: 120ms transform ease-in-out;
-            box-shadow: inset 1em 1em #1e3a8a;
-        }
+
         .candidate-card.selected .radio-custom {
+            background-color: #1e3a8a;
             border-color: #1e3a8a;
         }
-        .candidate-card.selected .radio-custom::before {
-            transform: scale(1);
+
+        .radio-custom::after {
+            content: "\f00c";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: white;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        .candidate-card.selected .radio-custom::after {
+            display: block;
         }
     </style>
 </head>
@@ -199,6 +203,19 @@
 
     </main>
 
+    <div id="voteSuccessModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 shadow-2xl text-center transform transition-all duration-300 scale-95 opacity-0" id="successContent">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-check text-4xl text-green-600"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Vote Cast!</h2>
+            <p class="text-gray-600 mb-8">Your selection has been securely encrypted and recorded in the digital ballot box.</p>
+            <button onclick="window.location.href='${pageContext.request.contextPath}/voter/dashboard'" class="w-full bg-[#1e3a8a] text-white font-bold py-3 rounded-xl hover:bg-blue-900 transition-colors">
+                Return to Dashboard
+            </button>
+        </div>
+    </div>
+
     <jsp:include page="../layout/footer.jsp" />
 
     <script>
@@ -220,13 +237,42 @@
             document.getElementById('submitBtn').disabled = !(hasCandidate && isConfirmed);
         }
 
-        function submitVote() {
+        async function submitVote() {
             const hasCandidate = document.querySelector('input[name="candidateId"]:checked') !== null;
             const isConfirmed = document.getElementById('confirmCheckbox').checked;
             
             if (hasCandidate && isConfirmed) {
-                // Submit form
-                document.getElementById('voteForm').submit();
+                const submitBtn = document.getElementById('submitBtn');
+                const originalContent = submitBtn.innerHTML;
+                
+                // Show loading state
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Processing...';
+                
+                const formData = new FormData(document.getElementById('voteForm'));
+                
+                try {
+                    const response = await fetch(document.getElementById('voteForm').action, {
+                        method: 'POST',
+                        body: new URLSearchParams(formData)
+                    });
+                    
+                    if (response.ok) {
+                        // Show success animation
+                        document.getElementById('voteSuccessModal').classList.remove('hidden');
+                        setTimeout(() => {
+                            const content = document.getElementById('successContent');
+                            content.classList.remove('scale-95', 'opacity-0');
+                            content.classList.add('scale-100', 'opacity-100');
+                        }, 10);
+                    } else {
+                        throw new Error('Submission failed');
+                    }
+                } catch (error) {
+                    alert('Error casting vote. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalContent;
+                }
             }
         }
     </script>
