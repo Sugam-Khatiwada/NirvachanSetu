@@ -82,21 +82,24 @@ public class CandidateProfileServlet extends HttpServlet {
                 return;
             }
 
-            // Check if this is a profile picture update
-            Part profileImagePart = request.getPart("profileImage");
-            if (profileImagePart != null && profileImagePart.getSize() > 0) {
-                String uploadPath = getServletContext().getRealPath("/") + "uploads" + File.separator + "candidate" + File.separator + "profile";
-                File uploadDir = new File(uploadPath);
-                if (!uploadDir.exists()) uploadDir.mkdirs();
+            // Check if this is a profile picture update (multipart request)
+            String contentType = request.getContentType();
+            if (contentType != null && contentType.toLowerCase().startsWith("multipart/")) {
+                Part profileImagePart = request.getPart("profileImage");
+                if (profileImagePart != null && profileImagePart.getSize() > 0) {
+                    String uploadPath = getServletContext().getRealPath("/") + "uploads" + File.separator + "candidate" + File.separator + "profile";
+                    File uploadDir = new File(uploadPath);
+                    if (!uploadDir.exists()) uploadDir.mkdirs();
 
-                String fileName = saveProfileImage(profileImagePart, uploadPath);
-                if (fileName != null) {
-                    user.setProfileImage("uploads/candidate/profile/" + fileName);
-                    userService.updateProfile(user);
-                    request.getSession().setAttribute("user", user);
-                    request.getSession().setAttribute("success", "Profile picture updated successfully.");
-                    response.sendRedirect(request.getContextPath() + "/candidate/profile");
-                    return;
+                    String fileName = saveProfileImage(profileImagePart, uploadPath);
+                    if (fileName != null) {
+                        user.setProfileImage("uploads/candidate/profile/" + fileName);
+                        userService.updateProfile(user);
+                        request.getSession().setAttribute("user", user);
+                        request.getSession().setAttribute("success", "Profile picture updated successfully.");
+                        response.sendRedirect(request.getContextPath() + "/candidate/profile");
+                        return;
+                    }
                 }
             }
 
