@@ -2,6 +2,20 @@
 
 NirvachanSetu is a comprehensive web-based Election Management System built with Java (Servlets/JSP), Maven, and an SQL database. The platform is designed to handle end-to-end election processes and supports three main roles: **Admin**, **Candidate**, and **Voter**.
 
+## Features
+- **Role-Based Access Control:** Distinct portals and dashboards for Admins, Candidates, and Voters.
+- **Voter Registration & Voting:** Secure user registration, constituency assignment, and online vote casting during active elections.
+- **Candidate Applications:** Voters can apply for candidacy, maintain their profile, and publish electoral manifestos.
+- **Admin Management:** Comprehensive administrative tools to manage users, approve candidate applications, define constituencies, and oversee elections.
+- **Real-time Results:** View historical and real-time election results efficiently.
+
+## Technologies Used
+- **Frontend:** HTML, CSS, JavaScript, JSP (JavaServer Pages)
+- **Backend:** Java 11+, Servlets, JSP
+- **Database & ORM:** Relational Database (MySQL/PostgreSQL), JPA (Java Persistence API) via `persistence.xml`
+- **Build Tool:** Apache Maven
+- **Web Server:** Apache Tomcat
+
 ## Prerequisites
 - **Java Development Kit (JDK)** 11 or higher
 - **Apache Maven** (or use the provided `mvnw` wrapper)
